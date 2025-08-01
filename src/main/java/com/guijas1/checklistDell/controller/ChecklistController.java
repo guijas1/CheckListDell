@@ -2,80 +2,75 @@ package com.guijas1.checklistDell.controller;
 
 import com.guijas1.checklistDell.entity.Checklist;
 import com.guijas1.checklistDell.service.ChecklistService;
+import com.guijas1.checklistDell.service.S3Service;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ResponseBody;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.io.IOException;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.Optional;
 
 @Controller
 public class ChecklistController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChecklistController.class);
+
     private final ChecklistService checklistService;
+    private final S3Service s3Service;
 
-    @Value("${file.upload-dir}")
-    private String uploadDir;
-
-    public ChecklistController(ChecklistService checklistService) {
+    public ChecklistController(ChecklistService checklistService, S3Service s3Service) {
         this.checklistService = checklistService;
+        this.s3Service = s3Service;
     }
 
-    @GetMapping("/checklist") // usado para formulário de novo checklist
-    public String exibirFormulario(Model model) {
+    @GetMapping("/checklist")
+    public String exibirFormulario(Model model, @RequestParam(value = "sucesso", required = false) String sucesso,
+                                   @RequestParam(value = "erro", required = false) String erro) {
+        logger.info("🔁 Exibindo formulário. Sucesso? {} | Erro: {}", sucesso, erro);
         model.addAttribute("checklist", new Checklist());
+        model.addAttribute("sucesso", sucesso != null);
+        model.addAttribute("erro", erro);
         return "checklist-form";
     }
 
     @PostMapping("/checklist")
     public String salvarChecklist(@ModelAttribute Checklist checklist,
-                                  @RequestParam("foto") MultipartFile foto) throws IOException {
-
-        if (!foto.isEmpty()) {
-            String nomeArquivo = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
-            Path caminho = Paths.get(uploadDir, nomeArquivo);
-            Files.createDirectories(caminho.getParent());
-            Files.write(caminho, foto.getBytes());
-            checklist.setFotoPath(caminho.toString());
+                                  @RequestParam("fotos") MultipartFile[] fotos
+    ) {
+        try {
+            checklistService.salvarChecklist(checklist, fotos);
+            return "redirect:/checklist?sucesso";
+        } catch (Exception e) {
+            logger.error("❌ Erro ao salvar checklist: {}", e.getMessage());
+            return "redirect:/checklist?erro=upload";
         }
-
-        checklistService.salvarChecklist(checklist);
-        return "redirect:/checklist?sucesso";
     }
-    @GetMapping("/checklists") // usado para listar todos os checklists preenchidos
+
+    @GetMapping("/checklists")
     public String listarChecklists(Model model) {
         model.addAttribute("checklists", checklistService.listarTodos());
         return "checklist-lista";
     }
 
-    @GetMapping("/fotos/{nomeArquivo:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> servirFoto(@PathVariable String nomeArquivo) throws IOException {
-        Path caminho = Paths.get(uploadDir).resolve(nomeArquivo);
-        Resource recurso = new org.springframework.core.io.UrlResource(caminho.toUri());
-
-        if (!recurso.exists()) {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/checklists/{id}")
+    public String exibirDetalhes(@PathVariable Long id, Model model) {
+        Optional<Checklist> checklist = checklistService.buscarPorId(id);
+        if (checklist.isPresent()) {
+            model.addAttribute("checklist", checklist.get());
+            return "checklist-detalhes";
+        } else {
+            return "redirect:/checklists?erro=notfound";
         }
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + recurso.getFilename() + "\"")
-                .body(recurso);
     }
+
+
     @GetMapping("/checklists/{id}/exportar")
     public void exportarChecklistPdf(@PathVariable Long id, HttpServletResponse response) throws IOException {
         Optional<Checklist> opt = checklistService.buscarPorId(id);
@@ -98,7 +93,7 @@ public class ChecklistController {
         Font textFont = new Font(Font.HELVETICA, 12);
 
         doc.add(new Paragraph("Checklist Dell", titleFont));
-        doc.add(new Paragraph(" ")); // espaço
+        doc.add(new Paragraph(" "));
 
         doc.add(new Paragraph("ID: " + checklist.getId(), textFont));
         doc.add(new Paragraph("Modelo: " + checklist.getModelo(), textFont));
@@ -112,21 +107,23 @@ public class ChecklistController {
         doc.add(new Paragraph("Tela Funciona: " + format(checklist.getTelaFunciona()), textFont));
         doc.add(new Paragraph("Teclado Funciona: " + format(checklist.getTecladoFunciona()), textFont));
         doc.add(new Paragraph("Wi-Fi Funciona: " + format(checklist.getWifiFunciona()), textFont));
-        doc.add(new Paragraph(" "));
+        doc.add(new Paragraph("Carcaça sem avarias: " + format(checklist.getCarcaca()), textFont));
 
         doc.add(new Paragraph("Observações:", labelFont));
         doc.add(new Paragraph(checklist.getObservacoes() != null ? checklist.getObservacoes() : "Sem observações.", textFont));
 
-        // Se houver imagem, tente adicionar
-        if (checklist.getFotoPath() != null) {
-            try {
-                Image foto = Image.getInstance(checklist.getFotoPath());
-                foto.scaleToFit(400, 300);
-                doc.add(new Paragraph(" "));
-                doc.add(new Paragraph("Foto anexada:", labelFont));
-                doc.add(foto);
-            } catch (Exception e) {
-                doc.add(new Paragraph("Erro ao carregar imagem: " + e.getMessage(), textFont));
+        if (checklist.getFotoPath() != null && !checklist.getFotoPath().isEmpty()) {
+            doc.add(new Paragraph(" "));
+            doc.add(new Paragraph("Fotos anexadas:", labelFont));
+            for (String path : checklist.getFotoPath()) {
+                try {
+                    Image foto = Image.getInstance(path);
+                    foto.scaleToFit(400, 300);
+                    foto.setSpacingBefore(10);
+                    doc.add(foto);
+                } catch (Exception e) {
+                    doc.add(new Paragraph("Erro ao carregar imagem: " + e.getMessage(), textFont));
+                }
             }
         }
 
@@ -136,6 +133,17 @@ public class ChecklistController {
     private String format(Boolean valor) {
         if (valor == null) return "Não informado";
         return valor ? "Sim" : "Não";
+    }
+
+    @PostMapping("/checklists/{id}/deletar")
+    public String deletarChecklist(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            checklistService.excluirChecklist(id);
+            redirectAttributes.addFlashAttribute("mensagem", "Checklist excluído com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erro", "Erro ao excluir checklist.");
+        }
+        return "redirect:/checklists";
     }
 
 }

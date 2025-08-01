@@ -6,54 +6,77 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Detalhes do Checklist</h3>
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">📝 Detalhes do Checklist</h3>
+            <a href="/checklists" class="btn btn-outline-light btn-sm">⮜ Voltar</a>
         </div>
         <div class="card-body">
 
-            <dl class="row">
-                <dt class="col-sm-3">ID</dt>
-                <dd class="col-sm-9" th:text="${checklist.id}"></dd>
-
-                <dt class="col-sm-3">Modelo</dt>
-                <dd class="col-sm-9" th:text="${checklist.modelo}"></dd>
-
-                <dt class="col-sm-3">Patrimônio</dt>
-                <dd class="col-sm-9" th:text="${checklist.patrimonio}"></dd>
-
-                <dt class="col-sm-3">Service Tag</dt>
-                <dd class="col-sm-9" th:text="${checklist.serviceTag}"></dd>
-
-                <dt class="col-sm-3">Data</dt>
-                <dd class="col-sm-9" th:text="${#dates.format(checklist.dataCriacao, 'dd/MM/yyyy HH:mm')}"></dd>
-            </dl>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>ID:</strong> <span th:text="${checklist.id}"></span><br>
+                    <strong>Modelo:</strong> <span th:text="${checklist.modelo}"></span><br>
+                    <strong>Patrimônio:</strong> <span th:text="${checklist.patrimonio}"></span><br>
+                </div>
+                <div class="col-md-6">
+                    <strong>Service Tag:</strong> <span th:text="${checklist.serviceTag}"></span><br>
+                    <strong>Data:</strong>
+                    <span th:text="${checklist.dataCriacao != null ? checklist.dataCriacao.toString() : '—'}"></span>
+                </div>
+            </div>
 
             <hr>
-            <h5>Checklist</h5>
-            <ul class="list-group mb-3">
-                <li class="list-group-item" th:text="'Liga normalmente: ' + (${checklist.liga} ? 'Sim' : 'Não')"></li>
-                <li class="list-group-item" th:text="'Tela apresenta imagem: ' + (${checklist.telaFunciona} ? 'Sim' : 'Não')"></li>
-                <li class="list-group-item" th:text="'Teclado funcionando: ' + (${checklist.tecladoFunciona} ? 'Sim' : 'Não')"></li>
-                <li class="list-group-item" th:text="'Wi-Fi conecta corretamente: ' + (${checklist.wifiFunciona} ? 'Sim' : 'Não')"></li>
+            <h5 class="mb-3">✔️ Respostas do Checklist</h5>
+            <ul class="list-group mb-4">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Liga normalmente
+                    <span th:text="${checklist.liga} != null ? (checklist.liga ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Tela apresenta imagem
+                    <span th:text="${checklist.telaFunciona} != null ? (checklist.telaFunciona ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Teclado funcionando
+                    <span th:text="${checklist.tecladoFunciona} != null ? (checklist.tecladoFunciona ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Wi-Fi conecta corretamente
+                    <span th:text="${checklist.wifiFunciona} != null ? (checklist.wifiFunciona ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Carcaça sem avarias
+                    <span th:text="${checklist.carcaca} != null ? (checklist.carcaca ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                </li>
             </ul>
 
-            <h5>Observações</h5>
-            <p th:text="${checklist.observacoes ?: 'Sem observações.'}"></p>
+            <h5>🗒️ Observações</h5>
+            <p th:text="${checklist.observacoes ?: 'Sem observações.'}" class="border rounded p-2 bg-white"></p>
 
-            <h5>Foto Anexada</h5>
-            <div th:if="${checklist.fotoPath != null}">
-                <img th:src="@{'/fotos/' + ${#strings.substring(checklist.fotoPath, checklist.fotoPath.lastIndexOf('/') + 1)}}"
-                     alt="Foto do checklist" class="img-fluid rounded border" style="max-width: 500px;">
+            <h5 class="mt-4">📸 Fotos Anexadas</h5>
+            <div th:if="${checklist.fotoPath != null and !checklist.fotoPath.isEmpty()}">
+                <div class="d-flex flex-wrap gap-3 mt-2">
+                    <div th:each="foto : ${checklist.fotoPath}">
+                        <img th:src="${foto}" alt="Foto do checklist" class="img-thumbnail" style="max-width: 200px;">
+                    </div>
+                </div>
             </div>
-            <div th:if="${checklist.fotoPath == null}" class="text-muted">
+            <div th:if="${checklist.fotoPath == null or checklist.fotoPath.isEmpty()}" class="text-muted mt-2">
+                Nenhuma imagem foi anexada.
+            </div>
+            <div th:if="${checklist.fotoPath == null}" class="text-muted mt-2">
                 Nenhuma imagem foi anexada.
             </div>
 
-            <hr>
-            <a href="/checklists" class="btn btn-secondary">Voltar</a>
-            <a th:href="@{'/checklists/' + ${checklist.id} + '/exportar'}" class="btn btn-outline-primary ms-2">📄 Exportar PDF</a>
+            <div class="mt-4 d-flex justify-content-end gap-2">
+                <a th:href="@{'/checklists/' + ${checklist.id} + '/exportar'}" class="btn btn-outline-primary">📄 Exportar PDF</a>
+                <form th:action="@{'/checklists/' + ${checklist.id} + '/deletar'}" method="post"
+                      onsubmit="return confirm('Tem certeza que deseja excluir este checklist?');">
+                    <button type="submit" class="btn btn-outline-danger">🗑️ Excluir Checklist</button>
+                </form>
+            </div>
 
         </div>
     </div>

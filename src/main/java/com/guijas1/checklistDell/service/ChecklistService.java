@@ -4,7 +4,10 @@ import com.guijas1.checklistDell.entity.Checklist;
 import com.guijas1.checklistDell.repository.ChecklistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,13 +17,8 @@ public class ChecklistService {
     @Autowired
     private ChecklistRepository checklistRepository;
 
-    public ChecklistService(ChecklistRepository checklistRepository) {
-        this.checklistRepository = checklistRepository;
-    }
-
-    public Checklist salvarChecklist(Checklist checklist) {
-        return checklistRepository.save(checklist);
-    }
+    @Autowired
+    private S3Service s3Service;
 
     public List<Checklist> listarTodos() {
         return checklistRepository.findAll();
@@ -30,4 +28,27 @@ public class ChecklistService {
         return checklistRepository.findById(id);
     }
 
+    public Checklist salvarChecklist(Checklist checklist, MultipartFile[] fotos) throws IOException {
+        if (fotos != null && fotos.length > 0) {
+            List<String> caminhos = new ArrayList<>();
+
+            for (MultipartFile foto : fotos) {
+                if (!foto.isEmpty()) {
+                    String url = s3Service.uploadImagem(foto);
+                    caminhos.add(url);
+                }
+            }
+
+            checklist.setFotoPath(caminhos); // agora é uma lista mesmo
+        }
+
+        return checklistRepository.save(checklist);
+    }
+
+
+
+
+    public void excluirChecklist(Long id) {
+        checklistRepository.deleteById(id);
+    }
 }
