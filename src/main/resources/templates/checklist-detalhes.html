@@ -32,23 +32,23 @@
             <ul class="list-group mb-4">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Liga normalmente
-                    <span th:text="${checklist.liga} != null ? (checklist.liga ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                    <span th:text="${checklist.liga ? 'Sim' : 'Não'}" class="fw-bold"></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Tela apresenta imagem
-                    <span th:text="${checklist.telaFunciona} != null ? (checklist.telaFunciona ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                    <span th:text="${checklist.telaFunciona ? 'Sim' : 'Não'}" class="fw-bold"></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Teclado funcionando
-                    <span th:text="${checklist.tecladoFunciona} != null ? (checklist.tecladoFunciona ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                    <span th:text="${checklist.tecladoFunciona ? 'Sim' : 'Não'}" class="fw-bold"></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Wi-Fi conecta corretamente
-                    <span th:text="${checklist.wifiFunciona} != null ? (checklist.wifiFunciona ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                    <span th:text="${checklist.wifiFunciona ? 'Sim' : 'Não'}" class="fw-bold"></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Carcaça sem avarias
-                    <span th:text="${checklist.carcaca} != null ? (checklist.carcaca ? 'Sim' : 'Não') : '—'" class="fw-bold"></span>
+                    <span th:text="${checklist.carcaca ? 'Sim' : 'Não'}" class="fw-bold"></span>
                 </li>
             </ul>
 
@@ -64,9 +64,6 @@
                 </div>
             </div>
             <div th:if="${checklist.fotoPath == null or checklist.fotoPath.isEmpty()}" class="text-muted mt-2">
-                Nenhuma imagem foi anexada.
-            </div>
-            <div th:if="${checklist.fotoPath == null}" class="text-muted mt-2">
                 Nenhuma imagem foi anexada.
             </div>
 

@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.util.Optional;
 
-@Controller
+@Controller("/checklist")
 public class ChecklistController {
 
     private static final Logger logger = LoggerFactory.getLogger(ChecklistController.class);
