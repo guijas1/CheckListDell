@@ -23,6 +23,7 @@ public class ChecklistController {
     private static final Logger logger = LoggerFactory.getLogger(ChecklistController.class);
 
     private final ChecklistService checklistService;
+
     private final S3Service s3Service;
 
     public ChecklistController(ChecklistService checklistService, S3Service s3Service) {

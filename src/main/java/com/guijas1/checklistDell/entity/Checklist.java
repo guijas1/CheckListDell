@@ -37,6 +37,7 @@ public class Checklist {
 
     @Lob
     private String observacoes;
+    // TODO: VERIFICAR A NECESSIDADE DESSA VARIAVEL.
 
     @ElementCollection
     @CollectionTable(name = "checklist_fotos", joinColumns = @JoinColumn(name = "checklist_id"))

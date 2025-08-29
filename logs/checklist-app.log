@@ -1,25 +1,25 @@
-2025-08-28T13:33:53.646-03:00  INFO 30804 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Starting ChecklistDellApplication using Java 22.0.1 with PID 30804 (C:\Users\Arklok\CheckListDell\target\classes started by Arklok in C:\Users\Arklok\CheckListDell)
-2025-08-28T13:33:53.657-03:00 DEBUG 30804 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Running with Spring Boot v3.5.3, Spring v6.2.8
-2025-08-28T13:33:53.658-03:00  INFO 30804 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : No active profile set, falling back to 1 default profile: "default"
-2025-08-28T13:33:53.736-03:00  INFO 30804 --- [checklistDell] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-08-28T13:33:53.736-03:00  INFO 30804 --- [checklistDell] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-08-28T13:33:54.595-03:00  INFO 30804 --- [checklistDell] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-08-28T13:33:54.665-03:00  INFO 30804 --- [checklistDell] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 56 ms. Found 1 JPA repository interface.
-2025-08-28T13:33:55.821-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2025-08-28T13:33:55.865-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2025-08-28T13:33:55.865-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.42]
-2025-08-28T13:33:55.972-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2025-08-28T13:33:55.972-03:00  INFO 30804 --- [checklistDell] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2235 ms
-2025-08-28T13:33:56.562-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-08-28T13:33:56.748-03:00  INFO 30804 --- [checklistDell] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
-2025-08-28T13:33:56.850-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2025-08-28T13:33:57.256-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-08-28T13:33:57.318-03:00  INFO 30804 --- [checklistDell] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-08-28T13:33:57.521-03:00  INFO 30804 --- [checklistDell] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@82425ba
-2025-08-28T13:33:57.523-03:00  INFO 30804 --- [checklistDell] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-08-28T13:33:57.584-03:00  WARN 30804 --- [checklistDell] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-08-28T13:33:57.586-03:00  WARN 30804 --- [checklistDell] [restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
-2025-08-28T13:33:57.615-03:00  INFO 30804 --- [checklistDell] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2025-08-28T21:54:04.217-03:00  INFO 32948 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Starting ChecklistDellApplication using Java 22.0.2 with PID 32948 (C:\Users\Administrador\checklistDell\checklistDell\target\classes started by Administrador in C:\Users\Administrador\checklistDell\checklistDell)
+2025-08-28T21:54:04.219-03:00 DEBUG 32948 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Running with Spring Boot v3.5.3, Spring v6.2.8
+2025-08-28T21:54:04.220-03:00  INFO 32948 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : No active profile set, falling back to 1 default profile: "default"
+2025-08-28T21:54:04.270-03:00  INFO 32948 --- [checklistDell] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-08-28T21:54:04.270-03:00  INFO 32948 --- [checklistDell] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-08-28T21:54:04.980-03:00  INFO 32948 --- [checklistDell] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-28T21:54:05.029-03:00  INFO 32948 --- [checklistDell] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 41 ms. Found 1 JPA repository interface.
+2025-08-28T21:54:05.596-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-08-28T21:54:05.616-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-08-28T21:54:05.617-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-08-28T21:54:05.685-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-08-28T21:54:05.686-03:00  INFO 32948 --- [checklistDell] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1415 ms
+2025-08-28T21:54:05.917-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-28T21:54:05.996-03:00  INFO 32948 --- [checklistDell] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-28T21:54:06.031-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-08-28T21:54:06.296-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-28T21:54:06.327-03:00  INFO 32948 --- [checklistDell] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-08-28T21:54:06.596-03:00  INFO 32948 --- [checklistDell] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4e8b1b00
+2025-08-28T21:54:06.597-03:00  INFO 32948 --- [checklistDell] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-08-28T21:54:06.668-03:00  WARN 32948 --- [checklistDell] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-28T21:54:06.669-03:00  WARN 32948 --- [checklistDell] [restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-08-28T21:54:06.688-03:00  INFO 32948 --- [checklistDell] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 8.0
@@ -27,80 +27,18 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2025-08-28T13:33:58.459-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-08-28T13:33:58.557-03:00  INFO 30804 --- [checklistDell] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-08-28T13:33:58.820-03:00  WARN 30804 --- [checklistDell] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-08-28T13:33:58.878-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
-2025-08-28T13:33:59.281-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2025-08-28T13:33:59.317-03:00  INFO 30804 --- [checklistDell] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2025-08-28T13:33:59.326-03:00  INFO 30804 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Started ChecklistDellApplication in 6.337 seconds (process running for 7.121)
-2025-08-28T13:35:04.362-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-08-28T13:35:04.363-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2025-08-28T13:35:04.364-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2025-08-28T13:35:04.469-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-1] c.g.c.controller.ChecklistController     : 🔁 Exibindo formulário. Sucesso? null | Erro: null
-2025-08-28T15:32:36.216-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@34eb0db1 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:32:37.654-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@71063597 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:33:19.326-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@dfec743 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:33:22.738-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@22fe7e71 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:33:36.346-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@62145d34 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:33:39.615-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5e566682 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:33:46.784-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@f8a96cf (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:33:51.619-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@c0868f1 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:33:56.288-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@61877d84 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:39:34.307-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3a60b395 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
-2025-08-28T15:39:34.314-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m34s766ms783µs400ns).
-2025-08-28T16:13:10.027-03:00  WARN 30804 --- [checklistDell] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m5s183ms949µs600ns).
-2025-08-28T16:15:43.188-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-7] c.g.c.controller.ChecklistController     : 🔁 Exibindo formulário. Sucesso?  | Erro: null
-2025-08-28T16:23:17.694-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-2] c.g.c.controller.ChecklistController     : 🔁 Exibindo formulário. Sucesso?  | Erro: null
-2025-08-28T16:27:20.892-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-4] c.g.c.controller.ChecklistController     : 🔁 Exibindo formulário. Sucesso? null | Erro: null
-2025-08-28T16:32:24.812-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-9] c.g.c.controller.ChecklistController     : 🔁 Exibindo formulário. Sucesso?  | Erro: null
-2025-08-28T17:05:42.991-03:00  INFO 30804 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-7] c.g.c.controller.ChecklistController     : 🔁 Exibindo formulário. Sucesso? null | Erro: null
-2025-08-28T17:13:17.218-03:00  INFO 30804 --- [checklistDell] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2025-08-28T17:13:17.228-03:00  INFO 30804 --- [checklistDell] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2025-08-28T17:13:17.246-03:00  INFO 30804 --- [checklistDell] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-08-28T17:13:17.273-03:00  INFO 30804 --- [checklistDell] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2025-08-28T17:13:17.277-03:00  INFO 30804 --- [checklistDell] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2025-08-28T17:13:34.702-03:00  INFO 8404 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Starting ChecklistDellApplication using Java 22.0.1 with PID 8404 (C:\Users\Arklok\CheckListDell\target\classes started by Arklok in C:\Users\Arklok\CheckListDell)
-2025-08-28T17:13:34.705-03:00 DEBUG 8404 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Running with Spring Boot v3.5.3, Spring v6.2.8
-2025-08-28T17:13:34.706-03:00  INFO 8404 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : No active profile set, falling back to 1 default profile: "default"
-2025-08-28T17:13:34.783-03:00  INFO 8404 --- [checklistDell] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-08-28T17:13:34.784-03:00  INFO 8404 --- [checklistDell] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-08-28T17:13:35.626-03:00  INFO 8404 --- [checklistDell] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-08-28T17:13:35.681-03:00  INFO 8404 --- [checklistDell] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 44 ms. Found 1 JPA repository interface.
-2025-08-28T17:13:36.292-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2025-08-28T17:13:36.316-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2025-08-28T17:13:36.316-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.42]
-2025-08-28T17:13:36.360-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2025-08-28T17:13:36.361-03:00  INFO 8404 --- [checklistDell] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1576 ms
-2025-08-28T17:13:36.642-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-08-28T17:13:36.754-03:00  INFO 8404 --- [checklistDell] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
-2025-08-28T17:13:36.806-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2025-08-28T17:13:37.180-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-08-28T17:13:37.217-03:00  INFO 8404 --- [checklistDell] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-08-28T17:13:37.424-03:00  INFO 8404 --- [checklistDell] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7d7e6b92
-2025-08-28T17:13:37.425-03:00  INFO 8404 --- [checklistDell] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-08-28T17:13:37.491-03:00  WARN 8404 --- [checklistDell] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-08-28T17:13:37.493-03:00  WARN 8404 --- [checklistDell] [restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
-2025-08-28T17:13:37.512-03:00  INFO 8404 --- [checklistDell] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
-	Database driver: undefined/unknown
-	Database version: 8.0
-	Autocommit mode: undefined/unknown
-	Isolation level: undefined/unknown
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2025-08-28T17:13:38.417-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-08-28T17:13:38.545-03:00  INFO 8404 --- [checklistDell] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-08-28T17:13:38.798-03:00  WARN 8404 --- [checklistDell] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-08-28T17:13:38.876-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
-2025-08-28T17:13:39.407-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2025-08-28T17:13:39.447-03:00  INFO 8404 --- [checklistDell] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2025-08-28T17:13:39.458-03:00  INFO 8404 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Started ChecklistDellApplication in 5.323 seconds (process running for 6.013)
-2025-08-28T17:14:08.854-03:00  INFO 8404 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-08-28T17:14:08.854-03:00  INFO 8404 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2025-08-28T17:14:08.855-03:00  INFO 8404 --- [checklistDell] [http-nio-10.41.5.131-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2025-08-28T17:14:33.765-03:00  INFO 8404 --- [checklistDell] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2025-08-28T17:14:33.767-03:00  INFO 8404 --- [checklistDell] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2025-08-28T17:14:33.771-03:00  INFO 8404 --- [checklistDell] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-08-28T17:14:33.775-03:00  INFO 8404 --- [checklistDell] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2025-08-28T17:14:33.785-03:00  INFO 8404 --- [checklistDell] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-08-28T21:54:07.383-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-28T21:54:07.564-03:00  INFO 32948 --- [checklistDell] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-28T21:54:07.763-03:00  WARN 32948 --- [checklistDell] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-28T21:54:07.804-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2025-08-28T21:54:08.206-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-08-28T21:54:08.238-03:00  INFO 32948 --- [checklistDell] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-08-28T21:54:08.245-03:00  INFO 32948 --- [checklistDell] [restartedMain] c.g.c.ChecklistDellApplication           : Started ChecklistDellApplication in 4.607 seconds (process running for 5.237)
+2025-08-28T22:13:02.131-03:00  INFO 32948 --- [checklistDell] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-28T22:13:02.134-03:00  INFO 32948 --- [checklistDell] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-08-28T22:13:02.144-03:00  INFO 32948 --- [checklistDell] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 10 ms
+2025-08-28T22:34:53.999-03:00  INFO 32948 --- [checklistDell] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-08-28T22:34:54.009-03:00  INFO 32948 --- [checklistDell] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-08-28T22:34:54.022-03:00  INFO 32948 --- [checklistDell] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-28T22:34:54.039-03:00  INFO 32948 --- [checklistDell] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-08-28T22:34:54.041-03:00  INFO 32948 --- [checklistDell] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
