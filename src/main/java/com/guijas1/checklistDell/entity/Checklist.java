@@ -37,7 +37,7 @@ public class Checklist {
 
     @Lob
     private String observacoes;
-    // TODO: VERIFICAR A NECESSIDADE DESSA VARIAVEL.
+
 
     @ElementCollection
     @CollectionTable(name = "checklist_fotos", joinColumns = @JoinColumn(name = "checklist_id"))
@@ -58,4 +58,11 @@ public class Checklist {
     public List<String> getFotoPath() {
         return this.fotoPath != null ? this.fotoPath : List.of();
     }
+    @Column(name = "chamado_otrs")
+    private String chamadoOTRS;
+
+    @Column(name = "origem_notebook")
+    private String historicoNotebook;
+
+
 }

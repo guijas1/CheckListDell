@@ -8,13 +8,13 @@
     <style>
 
         @media (max-width: 576px) {
-    .form-control, .form-check-label, .form-label {
-        font-size: 1rem;
-    }
-    h3 {
-        font-size: 1.3rem;
-       }
-    }
+            .form-control, .form-check-label, .form-label {
+                font-size: 1rem;
+            }
+            h3 {
+                font-size: 1.3rem;
+            }
+        }
 
         body.dark-mode {
             background-color: #121212;
@@ -119,6 +119,18 @@
                               placeholder="Descreva qualquer observação adicional..."></textarea>
                 </div>
 
+                <!-- Campos Opcionais -->
+                <div class="mb-3">
+                    <label class="form-label">📝 Chamado OTRS (opcional)</label>
+                    <input type="text" th:field="*{chamadoOTRS}" class="form-control" placeholder="Digite o número do chamado OTRS, se houver" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">📝 Origem do Notebook (opcional)</label>
+                    <input type="text" th:field="*{historicoNotebook}" class="form-control" placeholder="Informe a origem do notebook, se necessário" />
+                </div>
+
+                <!-- Fotos -->
                 <div class="mb-3">
                     <label class="form-label">📸 Anexar fotos</label>
                     <input class="form-control" type="file" id="fotos" name="fotos" multiple accept="image/*" onchange="previewImages()">
@@ -126,7 +138,7 @@
                 </div>
 
                 <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
-                <button type="submit" class="btn btn-success" id="btnEnviar">
+                    <button type="submit" class="btn btn-success" id="btnEnviar">
                         <span id="spinner" class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
                         ✅ Enviar Checklist
                     </button>

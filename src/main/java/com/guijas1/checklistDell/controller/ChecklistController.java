@@ -15,6 +15,7 @@ import com.lowagie.text.pdf.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller("/checklist")
@@ -54,11 +55,6 @@ public class ChecklistController {
         }
     }
 
-    @GetMapping("/checklists")
-    public String listarChecklists(Model model) {
-        model.addAttribute("checklists", checklistService.listarTodos());
-        return "checklist-lista";
-    }
 
     @GetMapping("/checklists/{id}")
     public String exibirDetalhes(@PathVariable Long id, Model model) {
@@ -146,5 +142,44 @@ public class ChecklistController {
         }
         return "redirect:/checklists";
     }
+
+    @GetMapping("/checklists")
+    public String listarChecklists(@RequestParam(value = "campoBusca", required = false) String campoBusca,
+                                   @RequestParam(value = "modelo", required = false) String modelo,
+                                   @RequestParam(value = "patrimonio", required = false) String patrimonio,
+                                   @RequestParam(value = "origem_notebook", required = false) String origem_notebook,
+                                   Model model) {
+        if ("modelo".equals(campoBusca) && modelo != null && !modelo.isEmpty()) {
+            model.addAttribute("checklists", checklistService.buscarPorModelo(modelo));
+        } else if ("patrimonio".equals(campoBusca) && patrimonio != null && !patrimonio.isEmpty()) {
+            model.addAttribute("checklists", checklistService.buscarPorPatrimonio(patrimonio));
+        } else if ("origem_notebook".equals(campoBusca) && origem_notebook != null && !origem_notebook.isEmpty()) {
+            model.addAttribute("checklists", checklistService.buscarPorOrigem(origem_notebook));
+        } else {
+            model.addAttribute("checklists", checklistService.listarTodos());
+        }
+        return "checklist-lista";
+    }
+
+
+
+    @PostMapping("/checklists/{id}/atualizar")
+    public String atualizarChecklist(@PathVariable Long id, @RequestParam String chamado_otrs, @RequestParam String origem_notebook) throws IOException {
+        Optional<Checklist> checklistOpt = checklistService.buscarPorId(id);
+        if (checklistOpt.isPresent()) {
+            Checklist checklist = checklistOpt.get();
+            checklist.setChamadoOTRS(chamado_otrs);
+            checklist.setHistoricoNotebook(origem_notebook);
+            checklistService.salvarChecklist(checklist, new MultipartFile[0]);  // Se não houver novas fotos
+            return "redirect:/checklists/" + id;
+        } else {
+            return "redirect:/checklists?erro=notfound";
+        }
+    }
+
+
+
+
+
 
 }

@@ -51,4 +51,16 @@ public class ChecklistService {
     public void excluirChecklist(Long id) {
         checklistRepository.deleteById(id);
     }
+
+    public List<Checklist> buscarPorPatrimonio(String patrimonio){
+        return checklistRepository.findByPatrimonio(patrimonio);
+    }
+
+    public List<Checklist> buscarPorOrigem(String historicoNotebook){
+        return checklistRepository.findByhistoricoNotebook(historicoNotebook);
+    }
+
+    public List<Checklist> buscarPorModelo(String modelo){
+        return checklistRepository.findByModelo(modelo);
+    }
 }

@@ -55,6 +55,19 @@
             <h5>🗒️ Observações</h5>
             <p th:text="${checklist.observacoes ?: 'Sem observações.'}" class="border rounded p-2 bg-white"></p>
 
+            <h5>📝 Atualizar Dados</h5>
+            <form th:action="@{'/checklists/' + ${checklist.id} + '/atualizar'}" method="post">
+                <div class="mb-3">
+                    <label for="chamado_otrs" class="form-label">Chamado OTRS</label>
+                    <input type="text" id="chamado_otrs" name="chamado_otrs" th:value="${checklist.chamadoOTRS}" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="origem_notebook" class="form-label">Origem do Notebook</label>
+                    <input type="text" id="origem_notebook" name="origem_notebook" th:value="${checklist.historicoNotebook}" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-outline-success">Salvar Alterações</button>
+            </form>
+
             <h5 class="mt-4">📸 Fotos Anexadas</h5>
             <div th:if="${checklist.fotoPath != null and !checklist.fotoPath.isEmpty()}">
                 <div class="d-flex flex-wrap gap-3 mt-2">

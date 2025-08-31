@@ -14,6 +14,41 @@
             <a href="/checklist" class="btn btn-success">+ Novo Checklist</a>
         </div>
         <div class="card-body">
+            <!-- Formulário de busca otimizado -->
+            <form th:action="@{/checklists}" method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="campoBusca" class="form-label">Selecione o critério de busca</label>
+                        <select id="campoBusca" name="campoBusca" class="form-control" onchange="toggleSearchField()">
+                            <option value="" disabled selected>Selecione</option>
+                            <option value="modelo">Modelo</option>
+                            <option value="patrimonio">Patrimônio</option>
+                            <option value="origem_notebook">Origem do Notebook</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo de entrada de acordo com a seleção -->
+                    <div class="col-md-8 mb-3" id="campoModelo" style="display:none;">
+                        <label for="modelo" class="form-label">Modelo</label>
+                        <input type="text" id="modelo" name="modelo" class="form-control" placeholder="Modelo do Notebook">
+                    </div>
+                    <div class="col-md-8 mb-3" id="campoPatrimonio" style="display:none;">
+                        <label for="patrimonio" class="form-label">Patrimônio</label>
+                        <input type="text" id="patrimonio" name="patrimonio" class="form-control" placeholder="Patrimônio do Notebook">
+                    </div>
+                    <div class="col-md-8 mb-3" id="campoOrigem" style="display:none;">
+                        <label for="origem_notebook" class="form-label">Origem do Notebook</label>
+                        <input type="text" id="origem_notebook" name="origem_notebook" class="form-control" placeholder="Origem do Notebook">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Tabela de checklists preenchidos -->
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped align-middle">
                     <thead class="table-dark text-center">
@@ -58,5 +93,26 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Função para exibir o campo de busca baseado na seleção
+    function toggleSearchField() {
+        const campoBusca = document.getElementById('campoBusca').value;
+        // Esconde todos os campos
+        document.getElementById('campoModelo').style.display = 'none';
+        document.getElementById('campoPatrimonio').style.display = 'none';
+        document.getElementById('campoOrigem').style.display = 'none';
+
+        // Exibe o campo correspondente à escolha do usuário
+        if (campoBusca === 'modelo') {
+            document.getElementById('campoModelo').style.display = 'block';
+        } else if (campoBusca === 'patrimonio') {
+            document.getElementById('campoPatrimonio').style.display = 'block';
+        } else if (campoBusca === 'origem_notebook') {
+            document.getElementById('campoOrigem').style.display = 'block';
+        }
+    }
+</script>
+
 </body>
 </html>
