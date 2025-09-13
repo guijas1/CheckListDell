@@ -57,7 +57,7 @@ public class ChecklistService {
     }
 
     public List<Checklist> buscarPorOrigem(String historicoNotebook){
-        return checklistRepository.findByhistoricoNotebook(historicoNotebook);
+        return checklistRepository.findByHistoricoNotebook(historicoNotebook);
     }
 
     public List<Checklist> buscarPorModelo(String modelo){
