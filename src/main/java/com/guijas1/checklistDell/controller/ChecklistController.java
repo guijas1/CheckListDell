@@ -1,8 +1,14 @@
 package com.guijas1.checklistDell.controller;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import com.guijas1.checklistDell.entity.Checklist;
 import com.guijas1.checklistDell.service.ChecklistService;
+import com.guijas1.checklistDell.service.QRCodeUtil;
 import com.guijas1.checklistDell.service.S3Service;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +21,11 @@ import com.lowagie.text.pdf.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Controller("/checklist")
@@ -33,14 +43,41 @@ public class ChecklistController {
     }
 
     @GetMapping("/checklist")
-    public String exibirFormulario(Model model, @RequestParam(value = "sucesso", required = false) String sucesso,
+    public String exibirFormulario(Model model,
+                                   @RequestParam(value = "sucesso", required = false) String sucesso,
                                    @RequestParam(value = "erro", required = false) String erro) {
         logger.info("🔁 Exibindo formulário. Sucesso? {} | Erro: {}", sucesso, erro);
+
         model.addAttribute("checklist", new Checklist());
         model.addAttribute("sucesso", sucesso != null);
         model.addAttribute("erro", erro);
+
+
+        List<String> modelos = Arrays.asList(
+                "LATITUDE 5410",
+                "LATITUDE 5420",
+                "LATITUDE 5480",
+                "LATITUDE 5270",
+                "LATITUDE 5250",
+                "LENOVO X230",
+                "PRECISION 3561"
+
+        );
+        model.addAttribute("modelos", modelos);
+        List<String> saudeBateria = Arrays.asList(
+                "Excellent",
+                "Good",
+                "Fair",
+                "Poor"
+        );
+
+        model.addAttribute("saudeBateria", saudeBateria);
+        List<String> localizacao = Arrays.asList("Armário 22", "Armário 21");
+        model.addAttribute("localizacao", localizacao);
+
         return "checklist-form";
     }
+
 
     @PostMapping("/checklist")
     public String salvarChecklist(@ModelAttribute Checklist checklist,
@@ -108,6 +145,10 @@ public class ChecklistController {
 
         doc.add(new Paragraph("Observações:", labelFont));
         doc.add(new Paragraph(checklist.getObservacoes() != null ? checklist.getObservacoes() : "Sem observações.", textFont));
+        doc.add(new Paragraph("Chamado OTRS:", labelFont));
+        doc.add(new Paragraph(checklist.getChamadoOTRS() != null ? checklist.getChamadoOTRS() : "Sem chamados atribuidos ainda.", textFont));
+        doc.add(new Paragraph("Histórico:", labelFont));
+        doc.add(new Paragraph(checklist.getHistoricoNotebook() != null ? checklist.getHistoricoNotebook() : "Sem histórico atribuido ainda.", textFont));
 
         if (checklist.getFotoPath() != null && !checklist.getFotoPath().isEmpty()) {
             doc.add(new Paragraph(" "));
@@ -148,38 +189,95 @@ public class ChecklistController {
                                    @RequestParam(value = "modelo", required = false) String modelo,
                                    @RequestParam(value = "patrimonio", required = false) String patrimonio,
                                    @RequestParam(value = "origem_notebook", required = false) String origem_notebook,
+                                   @RequestParam(value = "localizacao", required = false) String localizacao,
                                    Model model) {
+
         if ("modelo".equals(campoBusca) && modelo != null && !modelo.isEmpty()) {
             model.addAttribute("checklists", checklistService.buscarPorModelo(modelo));
+
         } else if ("patrimonio".equals(campoBusca) && patrimonio != null && !patrimonio.isEmpty()) {
             model.addAttribute("checklists", checklistService.buscarPorPatrimonio(patrimonio));
+
         } else if ("origem_notebook".equals(campoBusca) && origem_notebook != null && !origem_notebook.isEmpty()) {
             model.addAttribute("checklists", checklistService.buscarPorOrigem(origem_notebook));
+
+        } else if ("localizacao".equals(campoBusca) && localizacao != null && !localizacao.isEmpty()) {
+            model.addAttribute("checklists", checklistService.buscarPorLocalizacao(localizacao));
+
         } else {
             model.addAttribute("checklists", checklistService.listarTodos());
         }
+
         return "checklist-lista";
     }
 
 
 
+
     @PostMapping("/checklists/{id}/atualizar")
-    public String atualizarChecklist(@PathVariable Long id, @RequestParam String chamado_otrs, @RequestParam String origem_notebook) throws IOException {
+    public String atualizarChecklist(@PathVariable Long id,
+                                     @RequestParam(required = false) String chamado_otrs,
+                                     @RequestParam(required = false) String origem_notebook,
+                                     @RequestParam(required = false, name = "localizacao") String localizacao) throws IOException {
         Optional<Checklist> checklistOpt = checklistService.buscarPorId(id);
         if (checklistOpt.isPresent()) {
             Checklist checklist = checklistOpt.get();
             checklist.setChamadoOTRS(chamado_otrs);
             checklist.setHistoricoNotebook(origem_notebook);
-            checklistService.salvarChecklist(checklist, new MultipartFile[0]);  // Se não houver novas fotos
+            checklist.setLocalizacao(localizacao); // ✅ Agora salva também a localização
+            checklistService.salvarChecklist(checklist, new MultipartFile[0]);
             return "redirect:/checklists/" + id;
         } else {
             return "redirect:/checklists?erro=notfound";
         }
     }
 
+    //ENDPOINT DE LEITURA DE QR CODE PARA REDIRECIONAMENTO PARA LOCALIZAÇÃO.
+    @GetMapping("/checklists/localizacao/{codigo}")
+    public String buscarPorLocalizacao(@PathVariable String codigo, Model model) {
+        List<Checklist> notebooks = checklistService.buscarPorLocalizacao(codigo);
+        model.addAttribute("checklists", notebooks);
+        model.addAttribute("localizacao", codigo);
+        return "checklists-por-localizacao";
+    }
+
+    @GetMapping("/checklists/qrcode")
+    public String paginaQrCode() {
+        return "buscar-por-qrcode.html"; // nome do template Thymeleaf
+    }
+    @GetMapping("/checklists/qrcode/gerar/{localizacao}")
+    public void gerarQrCode(@PathVariable String localizacao, HttpServletResponse response) throws IOException {
+        try {
+            int width = 250;
+            int height = 250;
+
+            // Corrigido: espaço deve virar %20, não "+"
+            String encoded = URLEncoder.encode(localizacao, StandardCharsets.UTF_8)
+                    .replace("+", "%20");
+
+            String conteudo = "http://10.41.5.131:8080/checklists/localizacao/" + encoded;
+
+            BitMatrix matrix = new MultiFormatWriter()
+                    .encode(conteudo, BarcodeFormat.QR_CODE, width, height);
+
+            response.setContentType("image/png");
+            try (ServletOutputStream outputStream = response.getOutputStream()) {
+                MatrixToImageWriter.writeToStream(matrix, "PNG", outputStream);
+            }
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao gerar QRCode");
+        }
+    }
 
 
 
+    @GetMapping("/checklists/qrcodes")
+    public String gerarQRCodes(Model model) {
+        // Busca todas as localizações distintas
+        List<String> localizacoes = checklistService.listarLocalizacoes();
 
+        model.addAttribute("localizacoes", localizacoes);
+        return "qrcodes-lista"; // Thymeleaf
+    }
 
 }

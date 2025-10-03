@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -63,4 +64,13 @@ public class ChecklistService {
     public List<Checklist> buscarPorModelo(String modelo){
         return checklistRepository.findByModelo(modelo);
     }
+
+    public List<Checklist> buscarPorLocalizacao(String localizao){
+        return checklistRepository.findByLocalizacao(localizao);
+    }
+
+    public List<String> listarLocalizacoes(){
+        return checklistRepository.findAll().stream().map(Checklist::getLocalizacao).filter(Objects::nonNull).distinct().toList();
+    }
+
 }

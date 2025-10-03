@@ -64,5 +64,11 @@ public class Checklist {
     @Column(name = "origem_notebook")
     private String historicoNotebook;
 
+    @Column(name = "localizaçao")
+    private String localizacao;
+
+    @Column(name = "bateria")
+    private String bateria;
+
 
 }

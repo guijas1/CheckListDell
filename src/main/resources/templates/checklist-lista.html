@@ -11,7 +11,11 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Checklists Preenchidos</h4>
-            <a href="/checklist" class="btn btn-success">+ Novo Checklist</a>
+            <div>
+                <!-- ✅ Novo botão de leitura de QRCode -->
+                <a href="/checklists/qrcode" class="btn btn-outline-light btn-sm me-2">📷 Ler QRCode</a>
+                <a href="/checklist" class="btn btn-success">+ Novo Checklist</a>
+            </div>
         </div>
         <div class="card-body">
             <!-- Formulário de busca otimizado -->
@@ -24,6 +28,7 @@
                             <option value="modelo">Modelo</option>
                             <option value="patrimonio">Patrimônio</option>
                             <option value="origem_notebook">Origem do Notebook</option>
+                            <option value="localizacao">Localização</option> <!-- ✅ já inclui Localização no filtro -->
                         </select>
                     </div>
 
@@ -40,6 +45,10 @@
                         <label for="origem_notebook" class="form-label">Origem do Notebook</label>
                         <input type="text" id="origem_notebook" name="origem_notebook" class="form-control" placeholder="Origem do Notebook">
                     </div>
+                    <div class="col-md-8 mb-3" id="campoLocalizacao" style="display:none;">
+                        <label for="localizacao" class="form-label">Localização</label>
+                        <input type="text" id="localizacao" name="localizacao" class="form-control" placeholder="Ex: Armário 22">
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 text-center">
@@ -53,10 +62,10 @@
                 <table class="table table-bordered table-hover table-striped align-middle">
                     <thead class="table-dark text-center">
                     <tr>
-                        <th>ID</th>
                         <th>Modelo</th>
                         <th>Patrimônio</th>
                         <th>Service Tag</th>
+                        <th>Localização</th>
                         <th>Carcaça OK?</th>
                         <th>Data</th>
                         <th>Foto</th>
@@ -65,10 +74,10 @@
                     </thead>
                     <tbody>
                     <tr th:each="item : ${checklists}">
-                        <td th:text="${item.id}"></td>
                         <td th:text="${item.modelo}"></td>
                         <td th:text="${item.patrimonio}"></td>
                         <td th:text="${item.serviceTag}"></td>
+                        <td th:text="${item.localizacao != null ? item.localizacao : '—'}"></td>
                         <td th:text="${item.carcaca != null ? (item.carcaca ? 'Sim' : 'Não') : '—'}" class="text-center"></td>
                         <td th:text="${item.dataCriacaoFormatada}"></td>
                         <td class="text-center">
@@ -102,6 +111,7 @@
         document.getElementById('campoModelo').style.display = 'none';
         document.getElementById('campoPatrimonio').style.display = 'none';
         document.getElementById('campoOrigem').style.display = 'none';
+        document.getElementById('campoLocalizacao').style.display = 'none';
 
         // Exibe o campo correspondente à escolha do usuário
         if (campoBusca === 'modelo') {
@@ -110,6 +120,8 @@
             document.getElementById('campoPatrimonio').style.display = 'block';
         } else if (campoBusca === 'origem_notebook') {
             document.getElementById('campoOrigem').style.display = 'block';
+        } else if (campoBusca === 'localizacao') {
+            document.getElementById('campoLocalizacao').style.display = 'block';
         }
     }
 </script>

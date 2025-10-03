@@ -14,11 +14,13 @@
         </div>
         <div class="card-body">
 
+            <!-- Dados principais -->
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <strong>ID:</strong> <span th:text="${checklist.id}"></span><br>
                     <strong>Modelo:</strong> <span th:text="${checklist.modelo}"></span><br>
                     <strong>Patrimônio:</strong> <span th:text="${checklist.patrimonio}"></span><br>
+                    <strong>Localização:</strong> <span th:text="${checklist.localizacao != null ? checklist.localizacao : '—'}"></span><br>
+                    <strong>Saúde da Bateria:</strong> <span th:text="${checklist.bateria != null ? checklist.bateria : '—'}"></span><br>
                 </div>
                 <div class="col-md-6">
                     <strong>Service Tag:</strong> <span th:text="${checklist.serviceTag}"></span><br>
@@ -50,6 +52,11 @@
                     Carcaça sem avarias
                     <span th:text="${checklist.carcaca ? 'Sim' : 'Não'}" class="fw-bold"></span>
                 </li>
+                <!-- Novo item -->
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Saúde da bateria
+                    <span th:text="${checklist.bateria != null ? checklist.bateria : '—'}" class="fw-bold"></span>
+                </li>
             </ul>
 
             <h5>🗒️ Observações</h5>
@@ -64,6 +71,16 @@
                 <div class="mb-3">
                     <label for="origem_notebook" class="form-label">Origem do Notebook</label>
                     <input type="text" id="origem_notebook" name="origem_notebook" th:value="${checklist.historicoNotebook}" class="form-control">
+                </div>
+                <!-- ✅ Campo de edição da Localização -->
+                <div class="mb-3">
+                    <label for="localizacao" class="form-label">Localização</label>
+                    <input type="text" id="localizacao" name="localizacao" th:value="${checklist.localizacao}" class="form-control">
+                </div>
+                <!-- ✅ Novo campo para editar Saúde da Bateria -->
+                <div class="mb-3">
+                    <label for="bateria" class="form-label">Saúde da Bateria</label>
+                    <input type="text" id="bateria" name="bateria" th:value="${checklist.bateria}" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-outline-success">Salvar Alterações</button>
             </form>

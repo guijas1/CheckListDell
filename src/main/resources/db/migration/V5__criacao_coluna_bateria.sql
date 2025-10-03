@@ -1,0 +1,2 @@
+ALTER TABLE checklist
+ADD COLUMN bateria VARCHAR (255);

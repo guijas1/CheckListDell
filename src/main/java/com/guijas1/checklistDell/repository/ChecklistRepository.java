@@ -16,4 +16,13 @@ public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
 
     List<Checklist> findByModelo(String modelo);
 
+    @Query("SELECT c FROM Checklist c " +
+            "WHERE c.localizacao IS NOT NULL " +
+            "AND c.localizacao <> '' " +
+            "AND LOWER(c.localizacao) LIKE LOWER(CONCAT('%', :localizacao, '%'))")
+    List<Checklist> findByLocalizacao(@Param("localizacao") String localizacao);
+
+
+
+
 }
