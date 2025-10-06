@@ -12,6 +12,7 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -185,35 +186,36 @@ public class ChecklistController {
     }
 
     @GetMapping("/checklists")
-    public String listarChecklists(@RequestParam(value = "campoBusca", required = false) String campoBusca,
-                                   @RequestParam(value = "modelo", required = false) String modelo,
-                                   @RequestParam(value = "patrimonio", required = false) String patrimonio,
-                                   @RequestParam(value = "origem_notebook", required = false) String origem_notebook,
-                                   @RequestParam(value = "localizacao", required = false) String localizacao,
-                                   Model model) {
+    public String listarChecklists(
+            @RequestParam(value = "campoBusca", required = false) String campoBusca,
+            @RequestParam(value = "modelo", required = false) String modelo,
+            @RequestParam(value = "patrimonio", required = false) String patrimonio,
+            @RequestParam(value = "origem_notebook", required = false) String origem_notebook,
+            @RequestParam(value = "localizacao", required = false) String localizacao,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+
+        Page<Checklist> pagina;
 
         if ("modelo".equals(campoBusca) && modelo != null && !modelo.isEmpty()) {
-            model.addAttribute("checklists", checklistService.buscarPorModelo(modelo));
-
+            pagina = checklistService.buscarPorModelo(modelo, page, size);
         } else if ("patrimonio".equals(campoBusca) && patrimonio != null && !patrimonio.isEmpty()) {
-            model.addAttribute("checklists", checklistService.buscarPorPatrimonio(patrimonio));
-
+            pagina = checklistService.buscarPorPatrimonio(patrimonio, page, size);
         } else if ("origem_notebook".equals(campoBusca) && origem_notebook != null && !origem_notebook.isEmpty()) {
-            model.addAttribute("checklists", checklistService.buscarPorOrigem(origem_notebook));
-
+            pagina = checklistService.buscarPorOrigem(origem_notebook, page, size);
         } else if ("localizacao".equals(campoBusca) && localizacao != null && !localizacao.isEmpty()) {
-            model.addAttribute("checklists", checklistService.buscarPorLocalizacao(localizacao));
-
+            pagina = checklistService.buscarPorLocalizacao(localizacao, page, size);
         } else {
-            model.addAttribute("checklists", checklistService.listarTodos());
+            pagina = checklistService.listarPaginado(page, size);
         }
+
+        model.addAttribute("pagina", pagina);
+        model.addAttribute("checklists", pagina.getContent());
+        model.addAttribute("paginaAtual", page);
 
         return "checklist-lista";
     }
-
-
-
-
     @PostMapping("/checklists/{id}/atualizar")
     public String atualizarChecklist(@PathVariable Long id,
                                      @RequestParam(required = false) String chamado_otrs,
