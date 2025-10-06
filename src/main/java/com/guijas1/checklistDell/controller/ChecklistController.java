@@ -72,7 +72,7 @@ public class ChecklistController {
         );
 
         model.addAttribute("saudeBateria", saudeBateria);
-        List<String> localizacao = Arrays.asList("Armário 22", "Armário 21");
+        List<String> localizacao = Arrays.asList("Armário 22", "Armário 21", "Fora do estoque");
         model.addAttribute("localizacao", localizacao);
 
         return "checklist-form";
