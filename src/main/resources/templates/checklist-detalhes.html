@@ -4,95 +4,196 @@
     <meta charset="UTF-8">
     <title>Detalhes do Checklist</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .editable[contenteditable="true"] {
+            border-bottom: 1px dashed #0d6efd;
+            cursor: text;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .editable[contenteditable="true"]:focus {
+            background-color: #fff;
+            outline: none;
+        }
+        select.form-select {
+            max-width: 110px;
+            padding: 2px 4px;
+            font-size: 0.9rem;
+        }
+        .disabled-select {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .list-group-item {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
+            padding-left: 0.9rem;
+            padding-right: 0.9rem;
+        }
+        .list-group-item.d-flex.justify-content-between.align-items-center {
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .list-group-item span.fw-bold,
+        .list-group-item select.form-select-sm {
+            margin-left: auto;
+            min-width: 85px;
+        }
+        .section-divider {
+            border-top: 1px solid #dee2e6;
+            margin: 1.5rem 0;
+        }
+        h5.mb-3 {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+        }
+        h5.mb-3[data-icon="dell"]::before { content: "💻"; color: #0d6efd; }
+        h5.mb-3[data-icon="checklist"]::before { content: "✔️"; color: #0d6efd; }
+        h5.mb-3[data-icon="obs"]::before { content: "🗒️"; color: #0d6efd; }
+        h5.mt-4[data-icon="foto"]::before { content: "📸"; color: #0d6efd; }
+
+        .placeholder-text {
+            color: #888;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body class="bg-light">
 <div class="container my-5">
     <div class="card shadow-lg border-0">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h3 class="mb-0">📝 Detalhes do Checklist</h3>
-            <a href="/checklists" class="btn btn-outline-light btn-sm">⮜ Voltar</a>
-        </div>
-        <div class="card-body">
-
-            <!-- Dados principais -->
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Modelo:</strong> <span th:text="${checklist.modelo}"></span><br>
-                    <strong>Patrimônio:</strong> <span th:text="${checklist.patrimonio}"></span><br>
-                    <strong>Localização:</strong> <span th:text="${checklist.localizacao != null ? checklist.localizacao : '—'}"></span><br>
-                    <strong>Saúde da Bateria:</strong> <span th:text="${checklist.bateria != null ? checklist.bateria : '—'}"></span><br>
-                </div>
-                <div class="col-md-6">
-                    <strong>Service Tag:</strong> <span th:text="${checklist.serviceTag}"></span><br>
-                    <strong>Data:</strong>
-                    <span th:text="${checklist.dataCriacao != null ? checklist.dataCriacao.toString() : '—'}"></span>
-                </div>
+            <div class="d-flex gap-2">
+                <button id="editBtn" class="btn btn-outline-light btn-sm">✏️ Editar Campos</button>
+                <a href="/checklists" class="btn btn-outline-light btn-sm">⮜ Voltar</a>
             </div>
+        </div>
 
-            <hr>
-            <h5 class="mb-3">✔️ Respostas do Checklist</h5>
-            <ul class="list-group mb-4">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Liga normalmente
-                    <span th:text="${checklist.liga ? 'Sim' : 'Não'}" class="fw-bold"></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Tela apresenta imagem
-                    <span th:text="${checklist.telaFunciona ? 'Sim' : 'Não'}" class="fw-bold"></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Teclado funcionando
-                    <span th:text="${checklist.tecladoFunciona ? 'Sim' : 'Não'}" class="fw-bold"></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Wi-Fi conecta corretamente
-                    <span th:text="${checklist.wifiFunciona ? 'Sim' : 'Não'}" class="fw-bold"></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Carcaça sem avarias
-                    <span th:text="${checklist.carcaca ? 'Sim' : 'Não'}" class="fw-bold"></span>
-                </li>
-                <!-- Novo item -->
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Saúde da bateria
-                    <span th:text="${checklist.bateria != null ? checklist.bateria : '—'}" class="fw-bold"></span>
-                </li>
-            </ul>
+        <div class="card-body">
+            <form id="updateForm" th:action="@{'/checklists/' + ${checklist.id} + '/atualizar'}" method="post">
 
-            <h5>🗒️ Observações</h5>
-            <p th:text="${checklist.observacoes ?: 'Sem observações.'}" class="border rounded p-2 bg-white"></p>
+                <!-- DADOS PRINCIPAIS -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Modelo:</strong> <span th:text="${checklist.modelo}"></span><br>
+                        <strong>Patrimônio:</strong>
+                        <span id="patrimonio" class="editable" contenteditable="false" th:text="${checklist.patrimonio}"></span><br>
+                        <strong>Localização:</strong>
+                        <span id="localizacao" class="editable" contenteditable="false"
+                              th:text="${checklist.localizacao != null ? checklist.localizacao : '—'}"></span><br>
+                        <strong>Saúde da Bateria:</strong>
+                        <span id="bateria" class="editable" contenteditable="false"
+                              th:text="${checklist.bateria != null ? checklist.bateria : '—'}"></span><br>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Service Tag:</strong> <span th:text="${checklist.serviceTag}"></span><br>
+                        <strong>Data:</strong> <span th:text="${checklist.dataCriacaoFormatada}"></span><br>
+                        <strong>Chamado OTRS:</strong>
+                        <span id="chamadoOTRS" class="editable" contenteditable="false"
+                              th:text="${checklist.chamadoOTRS}"></span><br>
+                        <strong>Origem do Notebook:</strong>
+                        <span id="historicoNotebook" class="editable" contenteditable="false"
+                              th:text="${checklist.historicoNotebook}"></span><br>
+                    </div>
+                </div>
 
-            <h5>📝 Atualizar Dados</h5>
-            <form th:action="@{'/checklists/' + ${checklist.id} + '/atualizar'}" method="post">
-                <div class="mb-3">
-                    <label for="chamado_otrs" class="form-label">Chamado OTRS</label>
-                    <input type="text" id="chamado_otrs" name="chamado_otrs" th:value="${checklist.chamadoOTRS}" class="form-control">
+                <!-- 💻 INFORMAÇÕES DELL -->
+                <div class="section-divider"></div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0" data-icon="dell">Informações Dell</h5>
+                    <a th:href="@{'/checklists/' + ${checklist.id} + '/dell'}"
+                       class="btn btn-outline-primary btn-sm">🔍 Ver Detalhes Dell</a>
                 </div>
-                <div class="mb-3">
-                    <label for="origem_notebook" class="form-label">Origem do Notebook</label>
-                    <input type="text" id="origem_notebook" name="origem_notebook" th:value="${checklist.historicoNotebook}" class="form-control">
+
+                <ul class="list-group mb-4">
+                    <!-- Chamado Dell -->
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Chamado Dell
+                        <span th:if="${#strings.isEmpty(checklist.chamadoDell)}"
+                              class="editable fw-bold placeholder-text" contenteditable="false">Sem Registro</span>
+                        <span th:unless="${#strings.isEmpty(checklist.chamadoDell)}"
+                              id="chamadoDell" class="editable fw-bold" contenteditable="false"
+                              th:text="${checklist.chamadoDell}"></span>
+                    </li>
+
+                    <!-- Status Chamado Dell -->
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Status Chamado Dell
+                        <span th:if="${checklist.statusChamadoDell == T(com.guijas1.checklistDell.Enums.StatusChamadoDell).SEM_CHAMADO}"
+                              class="editable fw-bold placeholder-text" contenteditable="false">Sem chamado</span>
+                        <span th:unless="${checklist.statusChamadoDell == T(com.guijas1.checklistDell.Enums.StatusChamadoDell).SEM_CHAMADO}"
+                              id="statusChamadoDell" class="editable fw-bold" contenteditable="false"
+                              th:text="${checklist.statusChamadoDell}"></span>
+                    </li>
+                </ul>
+
+                <!-- ✔️ RESPOSTAS DO CHECKLIST -->
+                <div class="section-divider"></div>
+                <h5 class="mb-3" data-icon="checklist">Respostas do Checklist</h5>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Liga normalmente
+                        <select id="liga" name="liga" class="form-select form-select-sm disabled-select">
+                            <option th:selected="${checklist.liga}" value="true">Sim</option>
+                            <option th:selected="${!checklist.liga}" value="false">Não</option>
+                        </select>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Tela apresenta imagem
+                        <select id="telaFunciona" name="telaFunciona" class="form-select form-select-sm disabled-select">
+                            <option th:selected="${checklist.telaFunciona}" value="true">Sim</option>
+                            <option th:selected="${!checklist.telaFunciona}" value="false">Não</option>
+                        </select>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Teclado funcionando
+                        <select id="tecladoFunciona" name="tecladoFunciona" class="form-select form-select-sm disabled-select">
+                            <option th:selected="${checklist.tecladoFunciona}" value="true">Sim</option>
+                            <option th:selected="${!checklist.tecladoFunciona}" value="false">Não</option>
+                        </select>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Wi-Fi conecta corretamente
+                        <select id="wifiFunciona" name="wifiFunciona" class="form-select form-select-sm disabled-select">
+                            <option th:selected="${checklist.wifiFunciona}" value="true">Sim</option>
+                            <option th:selected="${!checklist.wifiFunciona}" value="false">Não</option>
+                        </select>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Carcaça sem avarias
+                        <select id="carcaca" name="carcaca" class="form-select form-select-sm disabled-select">
+                            <option th:selected="${checklist.carcaca}" value="true">Sim</option>
+                            <option th:selected="${!checklist.carcaca}" value="false">Não</option>
+                        </select>
+                    </li>
+                </ul>
+
+                <!-- OBSERVAÇÕES -->
+                <div class="section-divider"></div>
+                <h5 class="mb-3" data-icon="obs">Observações</h5>
+                <p id="observacoes" class="editable border rounded p-2 bg-white" contenteditable="false"
+                   th:text="${checklist.observacoes ?: 'Sem observações.'}"></p>
+
+                <div class="text-end mt-3">
+                    <button id="saveBtn" type="submit" class="btn btn-outline-success d-none">💾 Salvar Alterações</button>
                 </div>
-                <!-- ✅ Campo de edição da Localização -->
-                <div class="mb-3">
-                    <label for="localizacao" class="form-label">Localização</label>
-                    <input type="text" id="localizacao" name="localizacao" th:value="${checklist.localizacao}" class="form-control">
-                </div>
-                <!-- ✅ Novo campo para editar Saúde da Bateria -->
-                <div class="mb-3">
-                    <label for="bateria" class="form-label">Saúde da Bateria</label>
-                    <input type="text" id="bateria" name="bateria" th:value="${checklist.bateria}" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-outline-success">Salvar Alterações</button>
             </form>
 
-            <h5 class="mt-4">📸 Fotos Anexadas</h5>
+            <!-- 📸 FOTOS -->
+            <div class="section-divider"></div>
+            <h5 class="mt-4" data-icon="foto">Fotos Anexadas</h5>
+
             <div th:if="${checklist.fotoPath != null and !checklist.fotoPath.isEmpty()}">
                 <div class="d-flex flex-wrap gap-3 mt-2">
-                    <div th:each="foto : ${checklist.fotoPath}">
-                        <img th:src="${foto}" alt="Foto do checklist" class="img-thumbnail" style="max-width: 200px;">
+                    <div th:each="foto, iterStat : ${checklist.fotoPath}">
+                        <img th:src="${foto}" th:attr="data-index=${iterStat.index}"
+                             class="img-thumbnail shadow-sm gallery-photo"
+                             style="max-width: 200px; cursor: pointer;">
                     </div>
                 </div>
             </div>
+
             <div th:if="${checklist.fotoPath == null or checklist.fotoPath.isEmpty()}" class="text-muted mt-2">
                 Nenhuma imagem foi anexada.
             </div>
@@ -104,11 +205,86 @@
                     <button type="submit" class="btn btn-outline-danger">🗑️ Excluir Checklist</button>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
 
+<!-- MODAL DE FOTOS -->
+<div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark border-0">
+            <div class="modal-body text-center p-0">
+                <img id="galleryImage" class="img-fluid rounded" src="" alt="Foto ampliada">
+            </div>
+            <div class="modal-footer bg-dark border-0 justify-content-between">
+                <button id="prevBtn" class="btn btn-outline-light btn-sm">← Anterior</button>
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fechar</button>
+                <button id="nextBtn" class="btn btn-outline-light btn-sm">Próxima →</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const editBtn = document.getElementById("editBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const editables = document.querySelectorAll(".editable");
+    const selects = document.querySelectorAll("select");
+    const form = document.getElementById("updateForm");
+
+    editBtn.addEventListener("click", () => {
+        const editing = editBtn.classList.toggle("btn-warning");
+        editables.forEach(e => e.contentEditable = editing);
+        selects.forEach(s => s.classList.toggle("disabled-select", !editing));
+        saveBtn.classList.toggle("d-none", !editing);
+        editBtn.textContent = editing ? "🔒 Bloquear Edição" : "✏️ Editar Campos";
+    });
+
+    form.addEventListener("submit", function() {
+        editables.forEach(e => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = e.id;
+            input.value = e.innerText.trim();
+            this.appendChild(input);
+        });
+    });
+
+    // GALERIA DE FOTOS
+    const galleryModal = new bootstrap.Modal(document.getElementById('galleryModal'));
+    const galleryPhotos = document.querySelectorAll('.gallery-photo');
+    const galleryImage = document.getElementById('galleryImage');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let currentIndex = 0;
+    let photos = [];
+
+    galleryPhotos.forEach((photo, index) => {
+        photos.push(photo.src);
+        photo.addEventListener('click', () => {
+            currentIndex = index;
+            openImage(currentIndex);
+            galleryModal.show();
+        });
+    });
+
+    function openImage(index) {
+        if (index < 0) index = photos.length - 1;
+        if (index >= photos.length) index = 0;
+        galleryImage.src = photos[index];
+        currentIndex = index;
+    }
+
+    prevBtn.addEventListener('click', () => openImage(currentIndex - 1));
+    nextBtn.addEventListener('click', () => openImage(currentIndex + 1));
+
+    document.addEventListener('keydown', (e) => {
+        if (!document.getElementById('galleryModal').classList.contains('show')) return;
+        if (e.key === 'ArrowLeft') openImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') openImage(currentIndex + 1);
+    });
+</script>
 </body>
 </html>

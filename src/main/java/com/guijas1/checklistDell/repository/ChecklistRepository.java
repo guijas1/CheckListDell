@@ -4,13 +4,14 @@ import com.guijas1.checklistDell.entity.Checklist;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Objects;
 
-public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
+public interface ChecklistRepository extends JpaRepository<Checklist, Long>, JpaSpecificationExecutor<Checklist> {
 
     // Lista de métodos para o cadastro do checklist e busca
     List<Checklist> findByPatrimonio (String patrimonio);
@@ -49,5 +50,6 @@ public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
     List<Object[]> contarPorStatus();
     @Query("SELECT c.carcaca, COUNT(c) FROM Checklist c GROUP BY c.carcaca")
     List<Object[]> countForCarca();
+    
 
 }

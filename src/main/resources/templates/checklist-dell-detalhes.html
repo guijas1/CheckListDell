@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>💻 Informações Dell</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border: none; border-radius: 10px; }
+        .placeholder-text { color: #888; font-style: italic; }
+        .list-group-item { padding: 0.6rem 1rem; }
+        .section-divider { border-top: 1px solid #dee2e6; margin: 1.5rem 0; }
+        .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 1080; }
+    </style>
+</head>
+
+<body class="bg-light">
+<div class="container my-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">💻 Informações Dell</h3>
+            <a th:href="@{'/checklists/' + ${checklist.id}}" class="btn btn-outline-light btn-sm">⮜ Voltar ao Checklist</a>
+        </div>
+
+        <div class="card-body">
+            <form th:action="@{'/checklists/' + ${checklist.id} + '/editar-dell'}" method="post">
+
+                <!-- DADOS BÁSICOS -->
+                <div class="mb-4">
+                    <p><strong>Modelo:</strong> <span th:text="${checklist.modelo}"></span></p>
+                    <p><strong>Service Tag:</strong> <span th:text="${checklist.serviceTag}"></span></p>
+                    <hr>
+                </div>
+
+                <!-- CAMPOS EDITÁVEIS -->
+                <h5 class="fw-bold mb-3 text-primary">🔧 Dados Dell Específicos</h5>
+
+                <!-- Chamado Dell -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Chamado Dell</label>
+                    <input type="text" name="chamadoDell" class="form-control"
+                           th:value="${checklist.chamadoDell != null ? checklist.chamadoDell : ''}"
+                           placeholder="Ex: SR-2487321 ou vazio se não houver">
+                </div>
+
+                <!-- Status Chamado Dell -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Status Chamado Dell</label>
+                    <select name="statusChamadoDell" class="form-select">
+                        <option value="SEM_CHAMADO" th:selected="${checklist.statusChamadoDell?.name() == 'SEM_CHAMADO'}">Sem chamado</option>
+                        <option value="ABERTO" th:selected="${checklist.statusChamadoDell?.name() == 'ABERTO'}">Aberto</option>
+                        <option value="FECHADO" th:selected="${checklist.statusChamadoDell?.name() == 'FECHADO'}">Fechado</option>
+                    </select>
+                </div>
+
+                <!-- Status Interno -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Status Interno</label>
+                    <input type="text" name="statusInterno" class="form-control"
+                           th:value="${checklist.statusInterno != null ? checklist.statusInterno : ''}"
+                           placeholder="Ex: Aguardando orçamento, Em reparo, Retornado...">
+                </div>
+
+                <!-- BOTÕES -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">💾 Salvar Alterações</button>
+                    <a th:href="@{'/checklists/' + ${checklist.id} + '/dell'}" class="btn btn-outline-secondary">⮜ Cancelar</a>
+                </div>
+            </form>
+
+            <!-- DIVISÓRIA -->
+            <div class="section-divider"></div>
+
+            <!-- VISUALIZAÇÃO ATUAL -->
+            <h5 class="fw-bold mb-3 text-secondary">📋 Situação Atual</h5>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Chamado Dell:
+                    <span th:text="${#strings.isEmpty(checklist.chamadoDell) ? 'Sem registro' : checklist.chamadoDell}"
+                          class="fw-semibold"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Status Chamado Dell:
+                    <span th:text="${checklist.statusChamadoDell?.name() != null ? checklist.statusChamadoDell : 'Sem chamado'}"
+                          class="fw-semibold"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Status Interno:
+                    <span th:text="${#strings.isEmpty(checklist.statusInterno) ? 'Sem status definido' : checklist.statusInterno}"
+                          class="fw-semibold"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST DE SUCESSO -->
+<div class="toast-container">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                ✅ Alterações salvas com sucesso!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Mostrar o toast automaticamente se a URL tiver ?sucesso=true
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('sucesso') === 'true') {
+            const toastEl = document.getElementById('successToast');
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    });
+</script>
+</body>
+</html>

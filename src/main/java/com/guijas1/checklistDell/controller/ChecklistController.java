@@ -187,52 +187,64 @@ public class ChecklistController {
 
     @GetMapping("/checklists")
     public String listarChecklists(
-            @RequestParam(value = "campoBusca", required = false) String campoBusca,
-            @RequestParam(value = "modelo", required = false) String modelo,
-            @RequestParam(value = "patrimonio", required = false) String patrimonio,
-            @RequestParam(value = "origem_notebook", required = false) String origem_notebook,
-            @RequestParam(value = "localizacao", required = false) String localizacao,
+            @RequestParam(required = false) String modelo,
+            @RequestParam(required = false) String patrimonio,
+            @RequestParam(required = false) String historico_notebook,
+            @RequestParam(required = false) String localizacao,
+            @RequestParam(required = false) Boolean carcaca,
+            @RequestParam(required = false, name = "tecladoFunciona") Boolean tecladoFunciona,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Model model) {
 
-        Page<Checklist> pagina;
+        Page<Checklist> pagina = checklistService.buscarAvancadoPaginado(
+                modelo, patrimonio, historico_notebook, localizacao, carcaca, tecladoFunciona, page, size);
 
-        if ("modelo".equals(campoBusca) && modelo != null && !modelo.isEmpty()) {
-            pagina = checklistService.buscarPorModelo(modelo, page, size);
-        } else if ("patrimonio".equals(campoBusca) && patrimonio != null && !patrimonio.isEmpty()) {
-            pagina = checklistService.buscarPorPatrimonio(patrimonio, page, size);
-        } else if ("origem_notebook".equals(campoBusca) && origem_notebook != null && !origem_notebook.isEmpty()) {
-            pagina = checklistService.buscarPorOrigem(origem_notebook, page, size);
-        } else if ("localizacao".equals(campoBusca) && localizacao != null && !localizacao.isEmpty()) {
-            pagina = checklistService.buscarPorLocalizacao(localizacao, page, size);
-        } else {
-            pagina = checklistService.listarPaginado(page, size);
-        }
-
-        model.addAttribute("pagina", pagina);
         model.addAttribute("checklists", pagina.getContent());
-        model.addAttribute("paginaAtual", page);
+        model.addAttribute("pagina", pagina);
+
+        model.addAttribute("paramModelo", modelo);
+        model.addAttribute("paramPatrimonio", patrimonio);
+        model.addAttribute("paramHistoricoNotebook", historico_notebook);
+        model.addAttribute("paramLocalizacao", localizacao);
+        model.addAttribute("paramCarcaca", carcaca);
+        model.addAttribute("paramTecladoFunciona", tecladoFunciona);
 
         return "checklist-lista";
     }
+
+
     @PostMapping("/checklists/{id}/atualizar")
     public String atualizarChecklist(@PathVariable Long id,
-                                     @RequestParam(required = false) String chamado_otrs,
-                                     @RequestParam(required = false) String origem_notebook,
-                                     @RequestParam(required = false, name = "localizacao") String localizacao) throws IOException {
+                                     @ModelAttribute Checklist checklistAtualizado) throws IOException {
         Optional<Checklist> checklistOpt = checklistService.buscarPorId(id);
-        if (checklistOpt.isPresent()) {
-            Checklist checklist = checklistOpt.get();
-            checklist.setChamadoOTRS(chamado_otrs);
-            checklist.setHistoricoNotebook(origem_notebook);
-            checklist.setLocalizacao(localizacao); // ✅ Agora salva também a localização
-            checklistService.salvarChecklist(checklist, new MultipartFile[0]);
-            return "redirect:/checklists/" + id;
-        } else {
+        if (checklistOpt.isEmpty()) {
             return "redirect:/checklists?erro=notfound";
         }
+
+        Checklist checklistExistente = checklistOpt.get();
+
+
+        checklistExistente.setPatrimonio(checklistAtualizado.getPatrimonio());
+        checklistExistente.setLiga(checklistAtualizado.getLiga());
+        checklistExistente.setTelaFunciona(checklistAtualizado.getTelaFunciona());
+        checklistExistente.setTecladoFunciona(checklistAtualizado.getTecladoFunciona());
+        checklistExistente.setWifiFunciona(checklistAtualizado.getWifiFunciona());
+        checklistExistente.setCarcaca(checklistAtualizado.getCarcaca());
+        checklistExistente.setObservacoes(checklistAtualizado.getObservacoes());
+        checklistExistente.setLocalizacao(checklistAtualizado.getLocalizacao());
+        checklistExistente.setBateria(checklistAtualizado.getBateria());
+        checklistExistente.setChamadoOTRS(checklistAtualizado.getChamadoOTRS());
+        checklistExistente.setHistoricoNotebook(checklistAtualizado.getHistoricoNotebook());
+        checklistExistente.setChamadoDell(checklistAtualizado.getChamadoDell());
+        checklistExistente.setStatusChamadoDell(checklistAtualizado.getStatusChamadoDell());
+
+
+
+        checklistService.salvarChecklist(checklistExistente, new MultipartFile[0]);
+        return "redirect:/checklists/" + id;
     }
+
 
     //ENDPOINT DE LEITURA DE QR CODE PARA REDIRECIONAMENTO PARA LOCALIZAÇÃO.
     @GetMapping("/checklists/localizacao/{codigo}")
@@ -281,5 +293,203 @@ public class ChecklistController {
         model.addAttribute("localizacoes", localizacoes);
         return "qrcodes-lista"; // Thymeleaf
     }
+
+    @GetMapping("/checklists/exportar-avancado")
+    public void exportarAvancado(
+            @RequestParam(required = false) String modelo,
+            @RequestParam(required = false) String patrimonio,
+            @RequestParam(required = false, name = "historico_notebook") String historicoNotebook,
+            @RequestParam(required = false) String localizacao,
+            @RequestParam(required = false) Boolean carcaca,
+            @RequestParam(required = false) Boolean tecladoFunciona,
+            HttpServletResponse response
+    ) throws IOException {
+
+        // 🔹 Busca dinâmica com todos os filtros
+        List<Checklist> resultados = checklistService.buscarAvancado(
+                modelo, patrimonio, historicoNotebook, localizacao, carcaca, tecladoFunciona);
+
+        if (resultados.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Nenhum registro encontrado com os filtros aplicados.");
+            return;
+        }
+
+        // 🔸 Configura retorno do PDF
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=checklists_filtrados.pdf");
+
+        Document doc = new Document(PageSize.A4.rotate());
+        PdfWriter.getInstance(doc, response.getOutputStream());
+        doc.open();
+
+        Font titleFont = new Font(Font.HELVETICA, 16, Font.BOLD);
+        Font headerFont = new Font(Font.HELVETICA, 12, Font.BOLD);
+        Font textFont = new Font(Font.HELVETICA, 10);
+
+        doc.add(new Paragraph("Exportação Avançada de Checklists", titleFont));
+        doc.add(new Paragraph(" "));
+
+        // 🔹 Tabela agora com 7 colunas (acrescentamos teclado)
+        PdfPTable table = new PdfPTable(7);
+        table.setWidthPercentage(100);
+
+        table.addCell(new PdfPCell(new Phrase("Modelo", headerFont)));
+        table.addCell(new PdfPCell(new Phrase("Patrimônio", headerFont)));
+        table.addCell(new PdfPCell(new Phrase("Histórico", headerFont)));
+        table.addCell(new PdfPCell(new Phrase("Localização", headerFont)));
+        table.addCell(new PdfPCell(new Phrase("Carcaça OK", headerFont)));
+        table.addCell(new PdfPCell(new Phrase("Teclado OK", headerFont)));
+        table.addCell(new PdfPCell(new Phrase("Data", headerFont)));
+
+        for (Checklist c : resultados) {
+            table.addCell(new Phrase(c.getModelo() != null ? c.getModelo() : "-", textFont));
+            table.addCell(new Phrase(c.getPatrimonio() != null ? c.getPatrimonio() : "-", textFont));
+            table.addCell(new Phrase(c.getHistoricoNotebook() != null ? c.getHistoricoNotebook() : "-", textFont));
+            table.addCell(new Phrase(c.getLocalizacao() != null ? c.getLocalizacao() : "-", textFont));
+            table.addCell(new Phrase(c.getCarcaca() != null ? (c.getCarcaca() ? "Sim" : "Não") : "-", textFont));
+            table.addCell(new Phrase(c.getTecladoFunciona() != null ? (c.getTecladoFunciona() ? "Sim" : "Não") : "-", textFont));
+            table.addCell(new Phrase(c.getDataCriacao() != null ? c.getDataCriacao().toString() : "-", textFont));
+        }
+
+        doc.add(table);
+        doc.close();
+    }
+
+    @GetMapping("/checklists/exportar-avancado-xls")
+    public void exportarAvancadoXls(
+            @RequestParam(required = false) String modelo,
+            @RequestParam(required = false) String patrimonio,
+            @RequestParam(required = false, name = "service_tag") String serviceTag,
+            @RequestParam(required = false, name = "historico_notebook") String historicoNotebook,
+            @RequestParam(required = false) String localizacao,
+            @RequestParam(required = false) Boolean carcaca,
+            @RequestParam(required = false) Boolean tecladoRuim,
+            HttpServletResponse response
+    ) throws IOException {
+
+        List<Checklist> resultados = checklistService.buscarAvancado(
+                modelo, patrimonio, historicoNotebook, localizacao, carcaca, tecladoRuim);
+
+        if (resultados.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Nenhum registro encontrado com os filtros aplicados.");
+            return;
+        }
+
+        try (org.apache.poi.xssf.usermodel.XSSFWorkbook workbook = new org.apache.poi.xssf.usermodel.XSSFWorkbook()) {
+            String abaNome = "Checklists";
+            if (modelo != null && !modelo.isEmpty()) abaNome += " - " + modelo;
+            var sheet = workbook.createSheet(abaNome);
+
+            // 🔹 Estilos
+            var headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(org.apache.poi.ss.usermodel.IndexedColors.WHITE.getIndex());
+
+            var headerStyle = workbook.createCellStyle();
+            headerStyle.setFont(headerFont);
+            headerStyle.setFillForegroundColor(org.apache.poi.ss.usermodel.IndexedColors.DARK_BLUE.getIndex());
+            headerStyle.setFillPattern(org.apache.poi.ss.usermodel.FillPatternType.SOLID_FOREGROUND);
+            headerStyle.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+            headerStyle.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+            headerStyle.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+            headerStyle.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+
+            var zebraStyle = workbook.createCellStyle();
+            zebraStyle.setFillForegroundColor(org.apache.poi.ss.usermodel.IndexedColors.GREY_25_PERCENT.getIndex());
+            zebraStyle.setFillPattern(org.apache.poi.ss.usermodel.FillPatternType.SOLID_FOREGROUND);
+
+            var borderStyle = workbook.createCellStyle();
+            borderStyle.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+            borderStyle.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+            borderStyle.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+            borderStyle.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+
+            // 🔹 Cabeçalhos atualizados
+            String[] colunas = {"Modelo", "Patrimônio","Service Tag", "Histórico", "Localização", "Carcaça OK", "Teclado Ruim", "Data"};
+            var header = sheet.createRow(0);
+            for (int i = 0; i < colunas.length; i++) {
+                var cell = header.createCell(i);
+                cell.setCellValue(colunas[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // 🔹 Preenche linhas
+            int rowNum = 1;
+            for (Checklist c : resultados) {
+                var row = sheet.createRow(rowNum++);
+
+                String[] valores = {
+                        c.getModelo() != null ? c.getModelo() : "",
+                        c.getPatrimonio() != null ? c.getPatrimonio() : "",
+                        c.getServiceTag() != null ? c.getServiceTag() : "",
+                        c.getHistoricoNotebook() != null ? c.getHistoricoNotebook() : "",
+                        c.getLocalizacao() != null ? c.getLocalizacao() : "",
+                        c.getCarcaca() != null ? (c.getCarcaca() ? "Sim" : "Não") : "",
+                        c.getTecladoFunciona() != null ? (c.getTecladoFunciona() ? "Sim" : "Não") : "",
+                        c.getDataCriacao() != null ? c.getDataCriacao().toString() : ""
+                };
+
+                for (int i = 0; i < valores.length; i++) {
+                    var cell = row.createCell(i);
+                    cell.setCellValue(valores[i]);
+                    if (rowNum % 2 == 0) cell.setCellStyle(zebraStyle);
+                    else cell.setCellStyle(borderStyle);
+                }
+            }
+
+            // 🔹 Ajustes visuais
+            for (int i = 0; i < colunas.length; i++) sheet.autoSizeColumn(i);
+            sheet.createFreezePane(0, 1);
+            sheet.setAutoFilter(new org.apache.poi.ss.util.CellRangeAddress(0, rowNum - 1, 0, colunas.length - 1));
+
+            // 🔸 Retorno HTTP
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=checklists_filtrados.xlsx");
+
+            workbook.write(response.getOutputStream());
+        }
+    }
+
+    @GetMapping("/checklists/{id}/dell")
+    public String verInfoDell(@PathVariable Long id, Model model){
+        Checklist checklist = checklistService.buscarPorId(id).orElseThrow(() -> new RuntimeException("Checklist não encontrado"));
+        model.addAttribute("checklist", checklist);
+        return "checklist-dell-detalhes";
+    }
+
+    // GET → abre a página de edição (formulário)
+    @GetMapping("/checklists/{id}/editar-dell")
+    public String exibirFormularioEditarDell(@PathVariable Long id, Model model) {
+        Checklist checklist = checklistService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Checklist não encontrado"));
+        model.addAttribute("checklist", checklist);
+        return "editar-dell"; // nome do HTML com o formulário
+    }
+
+    // POST → salva o que foi editado
+    @PostMapping("/checklists/{id}/editar-dell")
+    public String editarDell(@PathVariable Long id,
+                             @ModelAttribute Checklist checklistAtualizado) throws IOException {
+        Optional<Checklist> checklistOpt = checklistService.buscarPorId(id);
+        if (checklistOpt.isEmpty()) {
+            return "redirect:/checklists?erro=notfound";
+        }
+
+        Checklist checklistExistente = checklistOpt.get();
+
+        checklistExistente.setChamadoDell(checklistAtualizado.getChamadoDell());
+        checklistExistente.setStatusChamadoDell(checklistAtualizado.getStatusChamadoDell());
+        checklistExistente.setStatusInterno(checklistAtualizado.getStatusInterno());
+
+        checklistService.salvarChecklist(checklistExistente, new MultipartFile[0]);
+
+        return "redirect:/checklists/" + id + "/dell?sucesso=true";
+    }
+
+
+
+
+
+
 
 }

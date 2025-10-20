@@ -1,5 +1,6 @@
 package com.guijas1.checklistDell.entity;
 
+import com.guijas1.checklistDell.Enums.StatusChamadoDell;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +39,15 @@ public class Checklist {
     @Lob
     private String observacoes;
 
+    @Column(name = "chamado_dell")
+    private String chamadoDell;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_chamado_dell")
+    private StatusChamadoDell statusChamadoDell;
+
+    @Column(name = "status_interno")
+    private String statusInterno;
 
     @ElementCollection
     @CollectionTable(name = "checklist_fotos", joinColumns = @JoinColumn(name = "checklist_id"))

@@ -1,6 +1,5 @@
 package com.guijas1.checklistDell.controller;
 
-
 import com.guijas1.checklistDell.service.EstatisticaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

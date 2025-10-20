@@ -1,14 +1,15 @@
 package com.guijas1.checklistDell.service;
 
 import com.guijas1.checklistDell.entity.Checklist;
+import com.guijas1.checklistDell.entity.ChecklistSpecification;
 import com.guijas1.checklistDell.repository.ChecklistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,22 +37,16 @@ public class ChecklistService {
     public Checklist salvarChecklist(Checklist checklist, MultipartFile[] fotos) throws IOException {
         if (fotos != null && fotos.length > 0) {
             List<String> caminhos = new ArrayList<>();
-
             for (MultipartFile foto : fotos) {
                 if (!foto.isEmpty()) {
                     String url = s3Service.uploadImagem(foto);
                     caminhos.add(url);
                 }
             }
-
-            checklist.setFotoPath(caminhos); // agora é uma lista mesmo
+            checklist.setFotoPath(caminhos);
         }
-
         return checklistRepository.save(checklist);
     }
-
-
-
 
     public void excluirChecklist(Long id) {
         checklistRepository.deleteById(id);
@@ -72,26 +67,57 @@ public class ChecklistService {
         return checklistRepository.findByHistoricoNotebookContainingIgnoreCase(historicoNotebook, pageable);
     }
 
-    // ✅ versão paginada
     public Page<Checklist> buscarPorLocalizacao(String localizacao, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return checklistRepository.findByLocalizacaoContainingIgnoreCase(localizacao, pageable);
     }
 
-    // ✅ versão sem paginação (para QR Code)
     public List<Checklist> buscarPorLocalizacao(String localizacao) {
         return checklistRepository.findByLocalizacao(localizacao);
     }
 
-
-
-    public List<String> listarLocalizacoes(){
-        return checklistRepository.findAll().stream().map(Checklist::getLocalizacao).filter(Objects::nonNull).distinct().toList();
+    public List<String> listarLocalizacoes() {
+        return checklistRepository.findAll().stream()
+                .map(Checklist::getLocalizacao)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toList();
     }
 
     public Page<Checklist> listarPaginado(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return checklistRepository.findAll(pageable);
+    }
+
+    public List<Checklist> buscarAvancado(
+            String modelo,
+            String patrimonio,
+            String historicoNotebook,
+            String localizacao,
+            Boolean carcaca,
+            Boolean tecladoRuim) {
+
+        Specification<Checklist> spec = ChecklistSpecification.comFiltros(
+                modelo, patrimonio, historicoNotebook, localizacao, carcaca, tecladoRuim);
+
+        return checklistRepository.findAll(spec);
+    }
+
+    public Page<Checklist> buscarAvancadoPaginado(
+            String modelo,
+            String patrimonio,
+            String historicoNotebook,
+            String localizacao,
+            Boolean carcaca,
+            Boolean tecladoRuim,
+            int page,
+            int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Specification<Checklist> spec = ChecklistSpecification.comFiltros(
+                modelo, patrimonio, historicoNotebook, localizacao, carcaca, tecladoRuim
+        );
+        return checklistRepository.findAll(spec, pageable);
     }
 
 }
