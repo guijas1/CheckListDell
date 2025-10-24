@@ -13,6 +13,7 @@
         }
         .pagination .page-link { color: #0d6efd; }
         .pagination .page-link:hover { background-color: #e9ecef; }
+        .table th { white-space: nowrap; }
     </style>
 </head>
 <body class="bg-light">
@@ -39,39 +40,34 @@
         </div>
 
         <div class="card-body">
-            <!-- 🔍 Filtros múltiplos -->
+            <!-- 🔍 Filtros principais -->
             <form id="filtroForm" th:action="@{/checklists}" method="get" class="mb-4">
                 <div class="row g-3 align-items-end">
 
-                    <!-- 🖥️ Modelo -->
                     <div class="col-md-3">
                         <label for="modelo" class="form-label">Modelo</label>
                         <input type="text" id="modelo" name="modelo" class="form-control"
                                th:value="${paramModelo}" placeholder="Ex: LATITUDE 5410">
                     </div>
 
-                    <!-- 🧾 Patrimônio -->
                     <div class="col-md-3">
                         <label for="patrimonio" class="form-label">Patrimônio</label>
                         <input type="text" id="patrimonio" name="patrimonio" class="form-control"
                                th:value="${paramPatrimonio}" placeholder="Ex: 123456">
                     </div>
 
-                    <!-- 🕐 Histórico -->
                     <div class="col-md-3">
                         <label for="historico_notebook" class="form-label">Origem / Histórico</label>
                         <input type="text" id="historico_notebook" name="historico_notebook" class="form-control"
                                th:value="${paramHistoricoNotebook}" placeholder="Ex: rollout, migração...">
                     </div>
 
-                    <!-- 📍 Localização -->
                     <div class="col-md-3">
                         <label for="localizacao" class="form-label">Localização</label>
                         <input type="text" id="localizacao" name="localizacao" class="form-control"
                                th:value="${paramLocalizacao}" placeholder="Ex: Armário 22">
                     </div>
 
-                    <!-- 🧰 Novo filtro: Carcaça OK -->
                     <div class="col-md-3">
                         <label for="carcaca" class="form-label">Carcaça OK?</label>
                         <select id="carcaca" name="carcaca" class="form-select">
@@ -81,7 +77,6 @@
                         </select>
                     </div>
 
-                    <!-- 🎹 Novo filtro: Teclado Funciona -->
                     <div class="col-md-3">
                         <label for="tecladoFunciona" class="form-label">Teclado Funciona?</label>
                         <select id="tecladoFunciona" name="tecladoRuim" class="form-select">
@@ -98,7 +93,7 @@
                 </div>
             </form>
 
-            <!-- 📋 Tabela -->
+            <!-- 📋 Tabela principal -->
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped align-middle">
                     <thead class="table-dark text-center">
@@ -107,8 +102,8 @@
                         <th>Patrimônio</th>
                         <th>Service Tag</th>
                         <th>Localização</th>
-                        <th>Carcaça OK?</th>
-                        <th>Teclado Funciona?</th>
+                        <th>Carcaça</th>
+                        <th>Teclado</th>
                         <th>Data</th>
                         <th>Foto</th>
                         <th>Ações</th>

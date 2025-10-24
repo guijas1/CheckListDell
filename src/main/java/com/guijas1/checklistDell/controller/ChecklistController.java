@@ -4,6 +4,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+import com.guijas1.checklistDell.Enums.Tag;
 import com.guijas1.checklistDell.entity.Checklist;
 import com.guijas1.checklistDell.service.ChecklistService;
 import com.guijas1.checklistDell.service.QRCodeUtil;
@@ -53,7 +54,7 @@ public class ChecklistController {
         model.addAttribute("sucesso", sucesso != null);
         model.addAttribute("erro", erro);
 
-
+        // 🔹 Modelos disponíveis
         List<String> modelos = Arrays.asList(
                 "LATITUDE 5410",
                 "LATITUDE 5420",
@@ -62,22 +63,56 @@ public class ChecklistController {
                 "LATITUDE 5250",
                 "LENOVO X230",
                 "PRECISION 3561"
-
         );
         model.addAttribute("modelos", modelos);
+
+        // 🔋 Saúde da bateria
         List<String> saudeBateria = Arrays.asList(
                 "Excellent",
                 "Good",
                 "Fair",
                 "Poor"
         );
-
         model.addAttribute("saudeBateria", saudeBateria);
-        List<String> localizacao = Arrays.asList("Armário 22", "Armário 21", "Fora do estoque");
+
+        // 📍 Localizações conhecidas
+        List<String> localizacao = Arrays.asList(
+                "Armário 21",
+                "Armário 22",
+                "Fora do estoque",
+                "Armário 04",
+                "Armário 01",
+                "Armário 02",
+                "Armário 03",
+                "Armário 05"
+        );
         model.addAttribute("localizacao", localizacao);
+
+        // 🏷️ Tipos de Tag (Rollout / Gestão de Ativos)
+        List<String> tags = Arrays.asList("ROLLOUT", "GESTAO_ATIVOS");
+        model.addAttribute("tags", tags);
+
+        // 🔧 Campos adicionais (para exibir labels dinâmicos, se quiser iterar no HTML futuramente)
+        List<String> verificacoesFisicas = Arrays.asList(
+                "Borracha de proteção",
+                "Parafusos",
+                "Tampa inferior",
+                "Portas",
+                "Dobradiças",
+                "Manchas na tela",
+                "Trincos na tela",
+                "Câmera",
+                "Microfone",
+                "Alto-falante"
+        );
+        model.addAttribute("verificacoesFisicas", verificacoesFisicas);
+
+        List<String> localidades = Arrays.asList("RJ", "BSB", "SC", "PE");
+        model.addAttribute("localidades", localidades);
 
         return "checklist-form";
     }
+
 
 
     @PostMapping("/checklist")
@@ -99,6 +134,7 @@ public class ChecklistController {
         Optional<Checklist> checklist = checklistService.buscarPorId(id);
         if (checklist.isPresent()) {
             model.addAttribute("checklist", checklist.get());
+            model.addAttribute("tags", Tag.values());
             return "checklist-detalhes";
         } else {
             return "redirect:/checklists?erro=notfound";
@@ -224,27 +260,52 @@ public class ChecklistController {
 
         Checklist checklistExistente = checklistOpt.get();
 
-
+        // 🧩 Identificação
         checklistExistente.setPatrimonio(checklistAtualizado.getPatrimonio());
+
+        // 💻 Funcionamento geral
         checklistExistente.setLiga(checklistAtualizado.getLiga());
         checklistExistente.setTelaFunciona(checklistAtualizado.getTelaFunciona());
         checklistExistente.setTecladoFunciona(checklistAtualizado.getTecladoFunciona());
         checklistExistente.setWifiFunciona(checklistAtualizado.getWifiFunciona());
         checklistExistente.setCarcaca(checklistAtualizado.getCarcaca());
-        checklistExistente.setObservacoes(checklistAtualizado.getObservacoes());
-        checklistExistente.setLocalizacao(checklistAtualizado.getLocalizacao());
+
+        // 🔋 Estado físico adicional
+        checklistExistente.setBorrachaProtecaoOk(checklistAtualizado.getBorrachaProtecaoOk());
+        checklistExistente.setBorrachaProtecaoFaltantes(checklistAtualizado.getBorrachaProtecaoFaltantes());
+        checklistExistente.setParafusosOk(checklistAtualizado.getParafusosOk());
+        checklistExistente.setParafusosFaltantes(checklistAtualizado.getParafusosFaltantes());
+        checklistExistente.setTampaInferiorOk(checklistAtualizado.getTampaInferiorOk());
+        checklistExistente.setTampaInferiorFaltantes(checklistAtualizado.getTampaInferiorFaltantes());
+        checklistExistente.setPortasFuncionando(checklistAtualizado.getPortasFuncionando());
+        checklistExistente.setDobradicasOk(checklistAtualizado.getDobradicasOk());
+        checklistExistente.setManchasTela(checklistAtualizado.getManchasTela());
+        checklistExistente.setTrincosTela(checklistAtualizado.getTrincosTela());
+        checklistExistente.setCameraFunciona(checklistAtualizado.getCameraFunciona());
+        checklistExistente.setMicrofoneFunciona(checklistAtualizado.getMicrofoneFunciona());
+        checklistExistente.setAltoFalanteFunciona(checklistAtualizado.getAltoFalanteFunciona());
         checklistExistente.setBateria(checklistAtualizado.getBateria());
-        checklistExistente.setChamadoOTRS(checklistAtualizado.getChamadoOTRS());
-        checklistExistente.setHistoricoNotebook(checklistAtualizado.getHistoricoNotebook());
+
+        // 🗃️ Chamados e status
         checklistExistente.setChamadoDell(checklistAtualizado.getChamadoDell());
         checklistExistente.setStatusChamadoDell(checklistAtualizado.getStatusChamadoDell());
+        checklistExistente.setChamadoOTRS(checklistAtualizado.getChamadoOTRS());
+        checklistExistente.setStatusInterno(checklistAtualizado.getStatusInterno());
 
+        // 📦 Origem e histórico
+        checklistExistente.setHistoricoNotebook(checklistAtualizado.getHistoricoNotebook());
+        checklistExistente.setLocalizacao(checklistAtualizado.getLocalizacao());
+        checklistExistente.setDemanda(checklistAtualizado.getDemanda());
+        checklistExistente.setTag(checklistAtualizado.getTag());
+        checklistExistente.setDepara(checklistAtualizado.getDepara());
+        checklistExistente.setLocalidade(checklistAtualizado.getLocalidade());
 
+        // 🖋️ Observações
+        checklistExistente.setObservacoes(checklistAtualizado.getObservacoes());
 
         checklistService.salvarChecklist(checklistExistente, new MultipartFile[0]);
         return "redirect:/checklists/" + id;
     }
-
 
     //ENDPOINT DE LEITURA DE QR CODE PARA REDIRECIONAMENTO PARA LOCALIZAÇÃO.
     @GetMapping("/checklists/localizacao/{codigo}")
