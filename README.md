@@ -1,6 +1,6 @@
 # 📘 Dell Notebook Checklist
 
-Sistema web para registro, auditoria e exportação de checklists de notebooks Dell.  
+Sistema web para registro, auditoria e exportação de checklists de notebooks Dell.
 Desenvolvido como projeto pessoal para estudo e portfólio.
 
 ---
@@ -21,16 +21,18 @@ Desenvolvido como projeto pessoal para estudo e portfólio.
 
 ## 📸 Prévia da Interface
 
-> Para funcionar, coloque suas imagens reais dentro da pasta `docs/`  
-> com os nomes abaixo:
+> Preview do funcionandomento da aplicação.
 
 ### Tela de Cadastro
+
 ![Cadastro](docs/preview-cadastro.png)
 
 ### Tela de Listagem
+
 ![Listagem](docs/preview-listagem.png)
 
 ### Tela de Detalhes
+
 ![Detalhes](docs/preview-detalhes.png)
 
 ---
@@ -68,6 +70,7 @@ src/main/java/br.guijas1.checklistDell
 ## 🧪 Como Executar Localmente
 
 ### Pré-requisitos
+
 - Java 17+
 - Maven
 - MySQL
@@ -120,21 +123,23 @@ docker run -p 8080:8080 checklist
 
 ## 🔍 Principais Rotas
 
-| Rota | Descrição |
-|------|-----------|
-| `/checklist` | Cadastro de novo checklist |
-| `/checklists` | Listagem geral |
-| `/checklists/{id}` | Detalhamento |
-| `/checklists/{id}/exportar` | Exportação em PDF |
-| `/qrcode` | Leitura de QR Code |
+| Rota                          | Descrição                |
+| ----------------------------- | -------------------------- |
+| `/checklist`                | Cadastro de novo checklist |
+| `/checklists`               | Listagem geral             |
+| `/checklists/{id}`          | Detalhamento               |
+| `/checklists/{id}/exportar` | Exportação em PDF        |
+| `/qrcode`                   | Leitura de QR Code         |
 
 ---
 
 ## 👨‍💻 Autor
 
-**Guijas Rodrigues**  
-Desenvolvedor Full Stack  
-📧 guijas.dev@gmail.com
+**Guilherme Tavares Rodrigues da Silva**
+Desenvolvedor Java Full Stack
+📧 guilherme.tavares20@outlook.com
+
+Site: [https://guijas.vercel.app/](https://guijas.vercel.app/)
 
 ---
 
