@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  checklist:
+    build: .
+    container_name: checklist_dell
+    env_file:
+      - .env
+    ports:
+      - "${SERVER_PORT}:8443"
+    volumes:
+      - ./logs:/app/logs
+      - ./keystore.p12:/app/keystore.p12
+    restart: always

@@ -1,79 +1,91 @@
-# ✅ Dell Notebook Checklist - ONS
+# 📘 Dell Notebook Checklist
 
-Sistema web para registro e acompanhamento de checklists de notebooks Dell antes da abertura de chamados técnicos. Desenvolvido para uso interno na sala da ONS.
+Sistema web para registro, auditoria e exportação de checklists de notebooks Dell.  
+Desenvolvido como projeto pessoal para estudo e portfólio.
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- **Java 17**
+- **Spring Boot 3**
+- **Spring MVC + Spring Data JPA**
+- **MySQL**
+- **Thymeleaf**
+- **Bootstrap 5**
+- **OpenPDF**
+- **ZXing (QR Code)**
+- **AWS S3** (opcional)
+
+---
+
+## 📸 Prévia da Interface
+
+> Para funcionar, coloque suas imagens reais dentro da pasta `docs/`  
+> com os nomes abaixo:
+
+### Tela de Cadastro
+![Cadastro](docs/preview-cadastro.png)
+
+### Tela de Listagem
+![Listagem](docs/preview-listagem.png)
+
+### Tela de Detalhes
+![Detalhes](docs/preview-detalhes.png)
 
 ---
 
 ## ✨ Funcionalidades
 
-- Cadastro de checklist com:
-    - Modelo, Patrimônio e Service Tag
-    - Verificações por checkbox
-    - Campo de observações
-    - Upload de foto (ex: tela quebrada, teclado com falha)
-- Listagem de todos os checklists preenchidos
-- Visualização detalhada de cada checklist
-- Exportação de checklists para PDF (com imagem inclusa)
-- Interface moderna e responsiva com Bootstrap 5
+- Cadastro completo com:
+  - Modelo, Patrimônio e Service Tag
+  - Estado da bateria
+  - Condição da carcaça
+  - Funcionamento do teclado
+  - Observações
+  - Upload de múltiplas fotos
+- Filtros avançados na listagem
+- Galeria de imagens
+- Exportação rápida de PDF
+- Leitura de QR Code
+- Interface moderna e responsiva
 
 ---
 
-## ⚙️ Tecnologias utilizadas
-
-- **Java 17**
-- **Spring Boot 3**
-    - Spring Web
-    - Spring Data JPA
-    - Thymeleaf
-- **MySQL** (local, na rede interna da ONS)
-- **Bootstrap 5**
-- **OpenPDF** (geração de PDFs)
-
----
-
-## 🗂️ Estrutura de pacotes
+## 🗂️ Estrutura do Projeto
 
 ```
-br.guijas1.checklistDell
-├── controller
-├── service
-├── repository
-├── entity
-└── config (opcional)
+src/main/java/br.guijas1.checklistDell
+ ├── controller
+ ├── service
+ ├── repository
+ ├── entity
+ └── config
 ```
 
 ---
 
-## 🖼️ Telas do sistema
+## 🧪 Como Executar Localmente
 
-- `/checklist` – Cadastro de novo checklist
-- `/checklists` – Lista de registros existentes
-- `/checklists/{id}` – Detalhamento do registro
-- `/checklists/{id}/exportar` – Exportação em PDF
-
----
-
-## 🧪 Como executar localmente
-
-### Pré-requisitos:
-- Java 17
+### Pré-requisitos
+- Java 17+
 - Maven
-- MySQL Server
+- MySQL
 
-### Configuração do banco
-
-Crie um banco de dados:
+### Criar o banco de dados
 
 ```sql
-CREATE DATABASE checklist_ons;
+CREATE DATABASE checklist;
 ```
 
-E configure no `application.properties`:
+### Configurar o `application.properties`
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/checklist_ons
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
+spring.datasource.url=jdbc:mysql://localhost:3306/checklist
+spring.datasource.username=SEU_USUARIO
+spring.datasource.password=SUA_SENHA
+
+file.upload-dir=uploads/
 ```
 
 ### Rodar o projeto
@@ -82,28 +94,50 @@ spring.datasource.password=sua_senha
 mvn spring-boot:run
 ```
 
-Acesse: [http://localhost:8080/checklist](http://localhost:8080/checklist)
+Acesse:
 
----
-
-## 📁 Uploads
-
-As fotos anexadas são armazenadas na pasta `uploads/` localmente. Você pode configurar isso em:
-
-```properties
-file.upload-dir=uploads/
+```
+http://localhost:8080
 ```
 
 ---
 
-## 📌 Autor
+## 🐳 Docker (opcional)
+
+Criar a imagem:
+
+```bash
+docker build -t checklist .
+```
+
+Executar:
+
+```bash
+docker run -p 8080:8080 checklist
+```
+
+---
+
+## 🔍 Principais Rotas
+
+| Rota | Descrição |
+|------|-----------|
+| `/checklist` | Cadastro de novo checklist |
+| `/checklists` | Listagem geral |
+| `/checklists/{id}` | Detalhamento |
+| `/checklists/{id}/exportar` | Exportação em PDF |
+| `/qrcode` | Leitura de QR Code |
+
+---
+
+## 👨‍💻 Autor
 
 **Guijas Rodrigues**  
-Desenvolvedor e Analista na Quality - ONS  
-📧 guijas1@ons.org.br
+Desenvolvedor Full Stack  
+📧 guijas.dev@gmail.com
 
 ---
 
 ## 🛡️ Licença
 
-Uso interno na ONS. Este projeto não possui licença pública.
+Projeto demonstrativo. Uso livre para estudo.
