@@ -1,11 +1,31 @@
+# -------------------------
+# Arquivos do projeto
+# -------------------------
 HELP.md
+.env
+keystore.p12
+application.properties
+application.yml
+
+# -------------------------
+# Maven / Build
+# -------------------------
 target/
 .mvn/wrapper/maven-wrapper.jar
+
+# Se quiser permitir targets dentro de módulos específicos (multi-module project)
 !**/src/main/**/target/
 !**/src/test/**/target/
-README.md
-.env
-### STS ###
+
+# Logs
+logs/
+*.log
+
+# -------------------------
+# IDEs
+# -------------------------
+
+## STS / Spring Tools Suite
 .apt_generated
 .classpath
 .factorypath
@@ -14,13 +34,13 @@ README.md
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
+## IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
+## NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -29,6 +49,16 @@ README.md
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-/logs/
-### VS Code ###
+
+## VS Code
 .vscode/
+
+# -------------------------
+# Sistema Operacional
+# -------------------------
+# Windows
+Thumbs.db
+desktop.ini
+
+# macOS
+.DS_Store
